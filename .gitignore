@@ -1,0 +1,8 @@
+# backend
+/backend/node_modules
+/backend/package-lock.json
+# frontend
+/frontend/node_modules
+/frontend/package-lock.json
+/frontend/dist
+/frontend/certs

@@ -1,0 +1,29 @@
+{
+  "name": "demo-build",
+  "version": "1.0.0",
+  "description": "simple js server with a single test to learn circle ci",
+  "main": "App.js",
+  "scripts": {
+    "test": "jest -o",
+    "test-all": "jest",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mataxxx5/demo-build.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/mataxxx5/demo-build/issues"
+  },
+  "homepage": "https://github.com/mataxxx5/demo-build#readme",
+  "devDependencies": {
+    "chai": "*",
+    "jest": "^25.1.0"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}

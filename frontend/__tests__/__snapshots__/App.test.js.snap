@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`testing App with Jest snapshot testing 1`] = `
+<div
+  className="App"
+>
+  <header
+    className="App-header"
+  >
+    <img
+      alt="logo"
+      className="App-logo"
+      src="test-file-stub"
+    />
+    <br />
+    <br />
+    <em>
+      Powered by house of clowns
+    </em>
+  </header>
+</div>
+`;
