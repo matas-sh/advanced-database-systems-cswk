@@ -1,10 +1,10 @@
-from http.server import BaseHTTPRequestHandler,HTTPServer
+from flask import Flask
 
-def run(server_class=HTTPServer, handler_class=BaseHTTPRequestHandler):
-    server_address = ('0.0.0.0', 3000)
-    httpd = server_class(server_address, handler_class)
-    print('starting server on port 3000!')
-    httpd.serve_forever()
+app = Flask(__name__)
 
-if __name__ == "__main__":
-    run()
+@app.route('/')
+def index():
+    return "Hello, World!"
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', debug=True)
