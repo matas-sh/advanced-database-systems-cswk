@@ -1,4 +1,4 @@
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import pymongo
 import pprint
 import json
@@ -6,23 +6,18 @@ from bson import json_util
 
 app = Flask(__name__)
 
-def crimes_near_location(longitude, latitude, distance):
-    query = {
-       "location": {
-         "$near": {
-           "$geometry": {
-              "type": "Point" ,
-              "coordinates": [ longitude , latitude ]
-           },
-           "$maxDistance": distance
-         }
-       }
-    }
+def bson_to_json_response(bson_data):
+    # Create a JSON object from bson Cursor
+    json_obj = json.loads(json.dumps(list(bson_data), default=json_util.default))
+    json_data = jsonify(json_obj)
+    return json_data
 
-    return crimes_collection.find(query)
+@app.route('/')
+def index():
+    return "Nothing is here yet"
 
 @app.route('/crimes-near-location')
-def index():
+def crimes_near_location():
     longitude = request.args.get('longitude', type = float)
     latitude = request.args.get('latitude', type = float)
     distance = request.args.get('distance', type = int)
@@ -30,9 +25,20 @@ def index():
     if not all(item in request.args for item in ["longitude", "latitude", "distance"]) or (None in [longitude, latitude, distance]):
         return "Invalid Request"
     else:
-        bson_data = crimes_near_location(longitude, latitude, distance)
-        data = [json.dumps(datum, default=json_util.default) for datum in bson_data]
-        return json.loads(data[0])
+        query = {
+            "location": {
+                "$near": {
+                "$geometry": {
+                    "type": "Point" ,
+                    "coordinates": [ longitude , latitude ]
+                },
+                "$maxDistance": distance
+                }
+            }
+        }
+
+        bson_data = crimes_collection.find(query)
+        return bson_to_json_response(bson_data)
 
 @app.route('/test')
 def test():
