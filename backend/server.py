@@ -1,10 +1,12 @@
 from flask import Flask, request, jsonify
+from flask_cors import CORS
 import pymongo
 import pprint
 import json
 from bson import json_util
 
 app = Flask(__name__)
+CORS(app)
 
 def bson_to_json_response(bson_data):
     # Create a JSON object from bson Cursor
