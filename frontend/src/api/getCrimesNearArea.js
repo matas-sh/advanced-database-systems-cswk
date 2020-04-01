@@ -1,5 +1,6 @@
 const PORT = 5000;
-const LOCALHOST = '192.168.0.82';
+// const LOCALHOST = process.env.REACT_APP_API_HOST || '127.0.0.1';
+const HOSTNAME = window.location.hostname;
 // const options = {
 //   headers: {
 //     'Content-Type': 'application/json',
@@ -8,7 +9,7 @@ const LOCALHOST = '192.168.0.82';
 // };
 
 export default async function getCrimesNearArea(longtitude, latitude, distance) {
-  const response = await fetch(`http://${LOCALHOST}:${PORT}/crimes-near-location?longitude=${longtitude}&latitude=${latitude}&distance=${distance}`);
+  const response = await fetch(`http://${HOSTNAME}:${PORT}/crimes-near-location?longitude=${longtitude}&latitude=${latitude}&distance=${distance}`);
   const data = await response.json();
   return data;
 }
