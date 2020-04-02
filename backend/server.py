@@ -133,25 +133,32 @@ def all_crimes_in_month():
     return bson_to_json_response(bson_data)
 
 
+# @app.route('/crime-types')
+def all_crime_types():
+    crime_types = crimes_collection.distinct("crime_type", {})
+    return list(crime_types)
 
 # Route for all crimes by type for the endpoint
-@app.route('/crimes-by-type')
+@app.route('/all-crimes-by-type')
 def all_crimes_by_type():
     # Set the required parameters
-    required_params = ["crime_type"]
+    required_params = [
+        {"name": "crime-type", "type": "crime-type"}
+    ]
     # Get sanitised query parameters
     parameters = sanitiser.get_sanitised_params(request.args, required_params)
-
+    print(parameters)
     # Check if parameters have no errors
     if "Invalid Request" in parameters:
         return jsonify(parameters)
 
     # Form Query
     query = {
-        "$crime_type": parameters["crime_type"]
+        "crime_type": parameters["crime-type"]
     }
     # Send Query and jsonify response
     bson_data = crimes_collection.find(query)
+
     return bson_to_json_response(bson_data)
 
 
@@ -170,7 +177,8 @@ if __name__ == '__main__':
     client = pymongo.MongoClient("mongodb://localhost:27017/")
     police_db = client["police"]
     crimes_collection = police_db["crimes"]
-
+    crime_types = all_crime_types()
+    print(crime_types)
     # Create a sanitiser object
     sanitiser = Sanitiser()
 
