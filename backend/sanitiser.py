@@ -2,7 +2,7 @@ from datetime import datetime as dt
 
 class Sanitiser():
 
-    # Details for the parameter requirements
+    # Details for the parameter type requirements
     requirements_info = {
         "longitude": {"type": "float", "bounds": (-180.0, 180.0)},
         "latitude": {"type": "float", "bounds": (-90.0, 90.0)},
@@ -18,13 +18,13 @@ class Sanitiser():
     parameter_name -- The name of the parameter that is being checked.
     error_dict -- The dictionary of errors, any new errors with parameter is appended.
     """
-    def check_parameter_type_and_bounds(self, recieved_params, parameter_name, error_dict):
+    def check_parameter_type_and_bounds(self, recieved_params, parameter_name, parameter_type, error_dict):
         # Check if parameter has actually been provided
         if parameter_name in recieved_params:
 
             # Get the type and bounds of the parameter from the requirements_info dictionary
-            required_type = self.requirements_info[parameter_name]["type"]
-            required_bounds = self.requirements_info[parameter_name]["bounds"]
+            required_type = self.requirements_info[parameter_type]["type"]
+            required_bounds = self.requirements_info[parameter_type]["bounds"]
 
             # Get the value for the parameter
             value = recieved_params[parameter_name]
@@ -61,7 +61,7 @@ class Sanitiser():
                 error_dict["Invalid Request"].setdefault("Type Error", list()).append(f"{parameter_name} - Expected type ({required_type}) but recieved: {value}")
             except FormatError:
                 # Return Custom Format Error if parameter doesn't have required format
-                date_format = self.requirements_info[parameter_name]["format"]
+                date_format = self.requirements_info[parameter_type]["format"]
                 error_dict["Invalid Request"].setdefault("Incorrect date format", list()).append(f"{parameter_name} - Expected format: ({date_format})  but recieved: {value}")
         else:
             # Add to error message if parameter is missing
@@ -80,8 +80,8 @@ class Sanitiser():
         # For each parameter we require, check if it exists, meets requirements and
         # convert it from a string to the correct type.
         # Modifies error message with all issues with the parameters provided.
-        for parameter_name in required_params:
-            self.check_parameter_type_and_bounds(recieved_params, parameter_name, errors)
+        for parameter in required_params:
+            self.check_parameter_type_and_bounds(recieved_params, parameter["name"], parameter["type"], errors)
 
         # If anything errored, return the error message
         if errors["Invalid Request"]:
