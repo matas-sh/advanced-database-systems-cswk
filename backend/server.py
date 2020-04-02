@@ -49,29 +49,27 @@ def crimes_near_location():
     return bson_to_json_response(bson_data)
 
 
-@app.route('/crimes-a-month')
-def crimes_a_month():
-    year_month = request.args.get('year-month', type = str)
+@app.route('/crimes-in-month')
+def crimes_in_month():
+    required_params = ["date"]
+    parameters = sanitiser.get_sanitised_params(request.args, required_params)
 
-    if not all(item in request.args for item in ["year-month"]) or (None in [year_month]):
-        return "Invalid Request"
-    else:
+    if "Invalid Request" in parameters:
+        return jsonify(parameters)
 
-        bson_data = crimes_collection.aggregate([
-            {
-                "$match": {
-                    "month" : {
-                        "$eq": year_month
-                    }
+    query = [
+        {
+            "$match": {
+                "date" : {
+                    "$eq": parameters["date"]
                 }
-            },
-            {"$count": "count"}]
-        )
+            }
+        },
+        {"$count": "count"}
+    ]
 
-        for doc in bson_data:
-            print(doc)
-        return bson_data.count
-
+    bson_data = crimes_collection.aggregate(query)
+    return bson_to_json_response(bson_data)
 
 @app.route('/test')
 def test():
