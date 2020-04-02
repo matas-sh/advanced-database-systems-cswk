@@ -16,6 +16,7 @@ class Sanitiser():
     Args:
     recieved_params -- Dictionary of the parameters provided, to be checked and sanitised.
     parameter_name -- The name of the parameter that is being checked.
+    parameter_type -- The type of the parameter that is being checked.
     error_dict -- The dictionary of errors, any new errors with parameter is appended.
     """
     def check_parameter_type_and_bounds(self, recieved_params, parameter_name, parameter_type, error_dict):
