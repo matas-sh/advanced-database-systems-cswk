@@ -1,9 +1,12 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
+from bson import json_util
+
 import pymongo
 import pprint
 import json
-from bson import json_util
+
+from sanitiser import Sanitiser
 
 app = Flask(__name__)
 CORS(app)
@@ -16,41 +19,6 @@ def bson_to_json_response(bson_data):
     json_data = jsonify(json_obj)
     return json_data
 
-def check_parameter_type_and_bounds(required_params, recieved_params, error_dict, parameter_name, required_type, bounds):
-    if parameter_name in recieved_params:
-        value = recieved_params[parameter_name]
-        try:
-            if required_type == "float":
-                value = float(value)
-            elif required_type == "int":
-                value = int(value)
-            else:
-                print(f"Unknown expected type: {required_type}")
-                
-            if value > bounds[0] and value <= bounds[1]:
-                recieved_params[parameter_name] = value
-            else:
-                error_dict["Invalid Request"].setdefault("Out of Bounds Error", list()).append(f"{parameter_name} - Must be ({bounds[0]} < x <= {bounds[1]}) but recieved: {value}")
-        except ValueError:
-            error_dict["Invalid Request"].setdefault("Type Error", list()).append(f"{parameter_name} - Expected type ({required_type}) but recieved: {value}")
-    else:
-        error_dict["Invalid Request"].setdefault("Missing parameter(s)", list()).append(parameter_name)
-
-def get_sanitised_params(required_params):
-    errors = {"Invalid Request": {}}
-
-    # Get parameters
-    recieved_params = dict(request.args)
-
-    # Parameter Checking
-    for parameter_detail in required_params:
-        check_parameter_type_and_bounds(required_params, recieved_params, errors, parameter_detail[0], parameter_detail[1], parameter_detail[2])
-    
-    if errors["Invalid Request"]:
-        return errors
-    else:
-        return recieved_params
-
 # Routes =================
 
 @app.route('/')
@@ -59,9 +27,8 @@ def index():
 
 @app.route('/crimes-near-location')
 def crimes_near_location():
-    required_params = [("longitude", "float", (-180.0, 180.0)), ("latitude", "float", (-90.0, 90.0)), ("distance", "int", (0, 1000))]
-    
-    parameters = get_sanitised_params(required_params)
+    required_params = ["longitude", "latitude", "distance"]
+    parameters = sanitiser.get_sanitised_params(request.args, required_params)
 
     if "Invalid Request" in parameters:
         return jsonify(parameters)
@@ -113,12 +80,17 @@ def test():
 
     return str(len(json_data))
 
-# Connect to Mongo DB
-client = pymongo.MongoClient("mongodb://localhost:27017/")
-police_db = client["police"]
-crimes_collection = police_db["crimes"]
+# RUN =================
 
 if __name__ == '__main__':
+
+    # Connect to Mongo DB
+    client = pymongo.MongoClient("mongodb://localhost:27017/")
+    police_db = client["police"]
+    crimes_collection = police_db["crimes"]
+
+    sanitiser = Sanitiser()
+
     app.run(host='0.0.0.0', debug=True)
 
     
