@@ -138,6 +138,42 @@ def all_crime_types():
     crime_types = crimes_collection.distinct("crime_type", {})
     return list(crime_types)
 
+@app.route('/crimes-in-month-by-type')
+def crimes_in_month_by_type():
+    # Set the required parameters
+    required_params = [
+        {"name": "crime-type", "type": "crime-type"},
+        {"name": "date", "type": "date"}
+    ]
+    # Get sanitised query parameters
+    parameters = sanitiser.get_sanitised_params(request.args, required_params)
+    # Check if parameters have no errors
+    if "Invalid Request" in parameters:
+        return jsonify(parameters)
+
+    # Form Query
+    query = [
+        {
+            "$match": {
+                 "date" : {
+                    "$eq": parameters["date"]
+                }
+            }
+        },
+        {
+            "$match": {
+                "crime_type" : {
+                    "$eq": parameters["crime-type"]
+                }
+            }
+        }
+    ]
+    # Send Query and jsonify response
+    bson_data = crimes_collection.aggregate(query)
+
+    return bson_to_json_response(bson_data)
+
+
 # Route for all crimes by type for the endpoint
 @app.route('/all-crimes-by-type-count')
 def all_crimes_by_type_count():
@@ -147,7 +183,6 @@ def all_crimes_by_type_count():
     ]
     # Get sanitised query parameters
     parameters = sanitiser.get_sanitised_params(request.args, required_params)
-    print(parameters)
     # Check if parameters have no errors
     if "Invalid Request" in parameters:
         return jsonify(parameters)
@@ -184,7 +219,7 @@ if __name__ == '__main__':
     client = pymongo.MongoClient("mongodb://localhost:27017/")
     police_db = client["police"]
     crimes_collection = police_db["crimes"]
-    crime_types = all_crime_types()
+    # crime_types = all_crime_types()
     print(crime_types)
     # Create a sanitiser object
     sanitiser = Sanitiser()
