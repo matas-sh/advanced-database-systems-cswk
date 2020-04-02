@@ -92,26 +92,24 @@ def all_crimes_in_month():
 
 
 
+# Route for all crimes by type for the endpoint
 @app.route('/crimes-by-type')
-def crimes_by_type():
+def all_crimes_by_type():
+    # Set the required parameters
     required_params = ["crime_type"]
+    # Get sanitised query parameters
     parameters = sanitiser.get_sanitised_params(request.args, required_params)
 
+    # Check if parameters have no errors
     if "Invalid Request" in parameters:
         return jsonify(parameters)
 
-    query = [
-        {
-            "$match": {
-                "date" : {
-                    "$eq": parameters["date"]
-                }
-            }
-        },
-        {"$count": "count"}
-    ]
-
-    bson_data = crimes_collection.aggregate(query)
+    # Form Query
+    query = {
+        "$crime_type": parameters["crime_type"]
+    }
+    # Send Query and jsonify response
+    bson_data = crimes_collection.find(query)
     return bson_to_json_response(bson_data)
 
 
