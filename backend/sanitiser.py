@@ -10,6 +10,15 @@ class Sanitiser():
         "date": {"type": "date", "bounds": (dt(2018, 2, 1), dt(2020, 1, 1)), "format": "YYYY-MM"}
     }
 
+    requirements_info_enum = {
+        "crime-type": {"set": [
+            'Anti-social behaviour', 'Bicycle theft', 'Burglary', 'Criminal damage and arson', 
+            'Drugs', 'Other crime', 'Other theft', 'Possession of weapons', 'Public order', 
+            'Robbery', 'Shoplifting', 'Theft from the person', 'Vehicle crime', 'Violence and sexual offences'
+            ]
+        }
+    }
+
     """
     General checking for all possible parameters.
 
@@ -19,7 +28,7 @@ class Sanitiser():
     parameter_type -- The type of the parameter that is being checked.
     error_dict -- The dictionary of errors, any new errors with parameter is appended.
     """
-    def check_parameter_type_and_bounds(self, recieved_params, parameter_name, parameter_type, error_dict):
+    def check_parameter(self, recieved_params, parameter_name, parameter_type, error_dict):
         # Check if parameter has actually been provided
         if parameter_name in recieved_params:
 
@@ -68,6 +77,18 @@ class Sanitiser():
             # Add to error message if parameter is missing
             error_dict["Invalid Request"].setdefault("Missing parameter(s)", list()).append(parameter_name)
 
+    def check_parameter_enum(self, recieved_params, parameter_name, parameter_type, error_dict):
+        if parameter_name in recieved_params:
+            value = recieved_params[parameter_name]
+            if value in self.requirements_info_enum[parameter_type]["set"]:
+                recieved_params[parameter_name] = value
+            else:
+                # If required type isn't in requirements_info dictionary
+                error_dict["Invalid Request"].setdefault("Unknown parameter(s)", list()).append(f"Unknown ({parameter_name}) value: {value}")
+        else:
+            # Add to error message if parameter is missing
+            error_dict["Invalid Request"].setdefault("Missing parameter(s)", list()).append(parameter_name)
+
     """
     Get sanitised required parameters from request_args
     """
@@ -82,7 +103,11 @@ class Sanitiser():
         # convert it from a string to the correct type.
         # Modifies error message with all issues with the parameters provided.
         for parameter in required_params:
-            self.check_parameter_type_and_bounds(recieved_params, parameter["name"], parameter["type"], errors)
+            param_type = parameter["type"]
+            if param_type in self.requirements_info_enum:
+                self.check_parameter_enum(recieved_params, parameter["name"], param_type, errors)
+            else:
+                self.check_parameter(recieved_params, parameter["name"], param_type, errors)
 
         # If anything errored, return the error message
         if errors["Invalid Request"]:
