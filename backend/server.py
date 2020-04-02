@@ -220,7 +220,7 @@ if __name__ == '__main__':
     police_db = client["police"]
     crimes_collection = police_db["crimes"]
     # crime_types = all_crime_types()
-    print(crime_types)
+    # print(crime_types)
     # Create a sanitiser object
     sanitiser = Sanitiser()
 
