@@ -6,7 +6,7 @@ class Sanitiser():
     requirements_info = {
         "longitude": {"type": "float", "bounds": (-180.0, 180.0)},
         "latitude": {"type": "float", "bounds": (-90.0, 90.0)},
-        "distance": {"type": "int", "bounds":  (0, 1000)},
+        "distance": {"type": "int", "bounds":  (0, 10000)},
         "date": {"type": "date", "bounds": (dt(2018, 2, 1), dt(2020, 1, 1)), "format": "YYYY-MM"}
     }
 
