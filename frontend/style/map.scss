@@ -2,3 +2,8 @@
     width: 100%;
     height: 100vh;
 }
+
+#app-grid {
+    display: grid;
+    grid-template-columns: 1fr 25fr;
+}

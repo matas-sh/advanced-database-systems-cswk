@@ -5,6 +5,7 @@ import {
   // Marker,
   // Popup,
 } from 'react-leaflet';
+import QueryDrawer from './QueryDrawer';
 import '../../style/map.scss';
 
 
@@ -16,11 +17,14 @@ export default function RenderMap() {
   // };
 
   return (
-    <Map center={[45.4, -75.7]} zoom={12}>
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-      />
-    </Map>
+    <div id="app-grid">
+      <QueryDrawer />
+      <Map center={[45.4, -75.7]} zoom={12}>
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        />
+      </Map>
+    </div>
   );
 }
