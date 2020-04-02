@@ -38,7 +38,7 @@ class Sanitiser():
                 error_dict["Invalid Request"].setdefault("Type Error", list()).append(f"{parameter_name} - Expected type ({required_type}) but recieved: {value}")
             except FormatError:
                 date_format = self.requirements_info[parameter_name]["format"]
-                error_dict["Invalid Request"].setdefault("Incorrect date format", list()).append(f"{parameter_name} - Expected format: {date_format}")
+                error_dict["Invalid Request"].setdefault("Incorrect date format", list()).append(f"{parameter_name} - Expected format: ({date_format})  but recieved: {value}")
         else:
             error_dict["Invalid Request"].setdefault("Missing parameter(s)", list()).append(parameter_name)
 
