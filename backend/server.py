@@ -103,8 +103,8 @@ def all_crimes_near_location_for_month():
     return bson_to_json_response(bson_data)
 
 # Route for all crimes count for month endpoint
-@app.route('/all-crimes-in-month')
-def all_crimes_in_month():
+@app.route('/all-crimes-in-month-count')
+def all_crimes_in_month_count():
     # Set the required parameters
     required_params = [ 
                         {"name": "date", "type": "date"}
@@ -139,8 +139,8 @@ def all_crime_types():
     return list(crime_types)
 
 # Route for all crimes by type for the endpoint
-@app.route('/all-crimes-by-type')
-def all_crimes_by_type():
+@app.route('/all-crimes-by-type-count')
+def all_crimes_by_type_count():
     # Set the required parameters
     required_params = [
         {"name": "crime-type", "type": "crime-type"}
@@ -153,11 +153,18 @@ def all_crimes_by_type():
         return jsonify(parameters)
 
     # Form Query
-    query = {
-        "crime_type": parameters["crime-type"]
-    }
+    query = [
+        {
+            "$match": {
+                "crime_type" : {
+                    "$eq": parameters["crime-type"]
+                }
+            }
+        },
+        {"$count": "count"}
+    ]
     # Send Query and jsonify response
-    bson_data = crimes_collection.find(query)
+    bson_data = crimes_collection.aggregate(query)
 
     return bson_to_json_response(bson_data)
 
