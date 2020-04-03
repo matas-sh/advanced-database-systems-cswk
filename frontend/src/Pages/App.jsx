@@ -1,12 +1,21 @@
 import React from 'react';
-import getCrimesNearArea from '../api/getCrimesNearArea';
+import getAllCrimesNearArea from '../api/getAllCrimesNearLocation';
+import getLocationByString from '../api/getLocationByString';
 import logo from '../logo.jpg';
 import '../../style/app.scss';
 
 function App() {
-  getCrimesNearArea(0.431697010993958, 51.6238441467285, 10)
+  getAllCrimesNearArea(0.431697010993958, 51.6238441467285, 10)
     .then((data) => {
       console.log(data);
+    })
+    .catch((e) => {
+      console.log(e);
+    });
+
+  getLocationByString('B4 7ET')
+    .then((data) => {
+      console.log(data.origin.displayLatLng);
     })
     .catch((e) => {
       console.log(e);
