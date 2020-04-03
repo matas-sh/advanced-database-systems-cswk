@@ -70,8 +70,8 @@ class Sanitiser():
                 error_dict["Invalid Request"].setdefault("Type Error", list()).append(f"{parameter_name} - Expected type ({required_type}) but recieved: {parameter_value}")
             except FormatError:
                 # Return Custom Format Error if parameter doesn't have required format
-                date_format = self.requirements_info[parameter_name]["format"]
-                error_dict["Invalid Request"].setdefault("Incorrect format", list()).append(f"{parameter_name} - Expected format: ({date_format})  but recieved: {parameter_value}")
+                parameter_format = self.requirements_info[parameter_name]["format"]
+                error_dict["Invalid Request"].setdefault("Incorrect format", list()).append(f"{parameter_name} - Expected format: ({parameter_format})  but recieved: {parameter_value}")
             return parameter_value
 
     def check_parameter_enum(self, parameter_name, parameter_value, error_dict):

@@ -29,10 +29,6 @@ def bson_to_json_response(bson_data):
 
 # Routes =================
 
-@app.route('/')
-def index():
-    return "Nothing is here yet"
-
 # Get all types of crime in DB
 @app.route('/all-crime-types')
 def all_crime_types():
