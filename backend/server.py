@@ -471,6 +471,112 @@ def crimes_in_month_by_type_count():
     return bson_to_json_response(bson_data)
 
 
+# Route for all crimes near location in month by type endpoint
+@app.route('/crimes-near-location-in-month-by-type')
+def crimes_near_location_in_month_by_type():
+    # Detail required parameters
+    required_params = [ 
+                        {"name": "longitude", "type": "longitude"},
+                        {"name": "latitude", "type": "latitude"},
+                        {"name": "distance", "type": "distance"},
+                        {"name": "date", "type": "date"},
+                        {"name": "crime-type", "type": "crime-type"}
+                    ]
+
+    # Get sanitised query paramteres using Sanitiser and required_params
+    parameters = sanitiser.get_sanitised_params(request.args, required_params)
+
+    # If there are any errors with query parameters, return the error instead
+    if "Invalid Request" in parameters:
+        return jsonify(parameters)
+    
+    # Otherwise, create a query dict for MongoDB
+    query = [
+        {
+            "$geoNear": {
+                "near": {
+                    "type": "Point" ,
+                    "coordinates": [ parameters["latitude"] , parameters["longitude"] ]
+                },
+                "distanceField": "dist.calculated",
+                "maxDistance": parameters["distance"]
+                }
+        },
+        {
+            "$match": {
+                 "date" : {
+                    "$eq": parameters["date"]
+                }
+            }
+        },
+        {
+            "$match": {
+                "crime_type" : {
+                    "$eq": parameters["crime-type"]
+                }
+            }
+        }
+    ]
+
+    # Use Query on crimes collection
+    bson_data = crimes_collection.aggregate(query)
+    # Return the flask json response with returned data from MongoDB
+    return bson_to_json_response(bson_data)
+
+# Route for all crimes near location in month by type count endpoint
+@app.route('/crimes-near-location-in-month-by-type-count')
+def crimes_near_location_in_month_by_type_count():
+    # Detail required parameters
+    required_params = [ 
+                        {"name": "longitude", "type": "longitude"},
+                        {"name": "latitude", "type": "latitude"},
+                        {"name": "distance", "type": "distance"},
+                        {"name": "date", "type": "date"},
+                        {"name": "crime-type", "type": "crime-type"}
+                    ]
+
+    # Get sanitised query paramteres using Sanitiser and required_params
+    parameters = sanitiser.get_sanitised_params(request.args, required_params)
+
+    # If there are any errors with query parameters, return the error instead
+    if "Invalid Request" in parameters:
+        return jsonify(parameters)
+    
+    # Otherwise, create a query dict for MongoDB
+    query = [
+        {
+            "$geoNear": {
+                "near": {
+                    "type": "Point" ,
+                    "coordinates": [ parameters["latitude"] , parameters["longitude"] ]
+                },
+                "distanceField": "dist.calculated",
+                "maxDistance": parameters["distance"]
+                }
+        },
+        {
+            "$match": {
+                 "date" : {
+                    "$eq": parameters["date"]
+                }
+            }
+        },
+        {
+            "$match": {
+                "crime_type" : {
+                    "$eq": parameters["crime-type"]
+                }
+            }
+        },
+        {"$count": "count"}
+    ]
+
+    # Use Query on crimes collection
+    bson_data = crimes_collection.aggregate(query)
+    # Return the flask json response with returned data from MongoDB
+    return bson_to_json_response(bson_data)
+
+
 @app.route('/test')
 def test():
     data = all_crimes_near_location(0.431697010993958, 51.6238441467285, 10000)
