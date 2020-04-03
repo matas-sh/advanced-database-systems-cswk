@@ -395,6 +395,7 @@ def crimes_near_location_by_type_count():
     return bson_to_json_response(bson_data)
 
 
+# Get all crimes in month by type
 @app.route('/crimes-in-month-by-type')
 def crimes_in_month_by_type():
     # Set the required parameters
@@ -430,6 +431,45 @@ def crimes_in_month_by_type():
     # Send Query and jsonify response
     bson_data = crimes_collection.aggregate(query)
     return bson_to_json_response(bson_data)
+
+# Get all crimes in month by type count
+@app.route('/crimes-in-month-by-type-count')
+def crimes_in_month_by_type_count():
+    # Set the required parameters
+    required_params = [
+        {"name": "crime-type", "type": "crime-type"},
+        {"name": "date", "type": "date"}
+    ]
+
+    # Get sanitised query parameters
+    parameters = sanitiser.get_sanitised_params(request.args, required_params)
+    # Check if parameters have no errors
+    if "Invalid Request" in parameters:
+        return jsonify(parameters)
+
+    # Form Query
+    query = [
+        {
+            "$match": {
+                 "date" : {
+                    "$eq": parameters["date"]
+                }
+            }
+        },
+        {
+            "$match": {
+                "crime_type" : {
+                    "$eq": parameters["crime-type"]
+                }
+            }
+        },
+        {"$count": "count"}
+    ]
+
+    # Send Query and jsonify response
+    bson_data = crimes_collection.aggregate(query)
+    return bson_to_json_response(bson_data)
+
 
 @app.route('/test')
 def test():
