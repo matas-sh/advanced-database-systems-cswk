@@ -185,7 +185,7 @@ def all_crimes_in_date_range():
                     "$lte": ordered_dates[1]
                 }
             }
-        },
+        }
     ]
 
     # Send Query and jsonify response
@@ -352,6 +352,106 @@ def crimes_near_location_in_month_count():
         {
             "$match": {
                 "date" : parameters["date"]
+            }
+        },
+        {"$count": "count"}
+    ]
+
+    # Use Query on crimes collection
+    bson_data = crimes_collection.aggregate(query)
+    # Return the flask json response with returned data from MongoDB
+    return bson_to_json_response(bson_data)
+
+
+# Route for all crimes near location in date range endpoint
+@app.route('/crimes-near-location-in-date-range')
+def crimes_near_location_in_date_range():
+    # Detail required parameters
+    required_params = [ 
+                        {"name": "longitude", "type": "longitude"},
+                        {"name": "latitude", "type": "latitude"},
+                        {"name": "distance", "type": "distance"},
+                        {"name": "date1", "type": "date"},
+                        {"name": "date2", "type": "date"}
+                    ]
+
+    # Get sanitised query paramteres using Sanitiser and required_params
+    parameters = sanitiser.get_sanitised_params(request.args, required_params)
+
+    # If there are any errors with query parameters, return the error instead
+    if "Invalid Request" in parameters:
+        return jsonify(parameters)
+
+    # Sort dates by time
+    ordered_dates = sorted([parameters["date1"], parameters["date2"]])
+    
+    # Otherwise, create a query dict for MongoDB
+    query = [
+        {
+            "$geoNear": {
+                "near": {
+                    "type": "Point" ,
+                    "coordinates": [ parameters["latitude"] , parameters["longitude"] ]
+                },
+                "distanceField": "dist.calculated",
+                "maxDistance": parameters["distance"]
+                }
+        },
+        {
+            "$match": {
+                "date" : {
+                    "$gte": ordered_dates[0],
+                    "$lte": ordered_dates[1]
+                }
+            }
+        }
+    ]
+
+    # Use Query on crimes collection
+    bson_data = crimes_collection.aggregate(query)
+    # Return the flask json response with returned data from MongoDB
+    return bson_to_json_response(bson_data)
+
+# Route for all crimes near location in date range count endpoint
+@app.route('/crimes-near-location-in-date-range-count')
+def crimes_near_location_in_date_range_count():
+    # Detail required parameters
+    required_params = [ 
+                        {"name": "longitude", "type": "longitude"},
+                        {"name": "latitude", "type": "latitude"},
+                        {"name": "distance", "type": "distance"},
+                        {"name": "date1", "type": "date"},
+                        {"name": "date2", "type": "date"}
+                    ]
+
+    # Get sanitised query paramteres using Sanitiser and required_params
+    parameters = sanitiser.get_sanitised_params(request.args, required_params)
+
+    # If there are any errors with query parameters, return the error instead
+    if "Invalid Request" in parameters:
+        return jsonify(parameters)
+
+    # Sort dates by time
+    ordered_dates = sorted([parameters["date1"], parameters["date2"]])
+    
+    # Otherwise, create a query dict for MongoDB
+    query = [
+        {
+            "$geoNear": {
+                "near": {
+                    "type": "Point" ,
+                    "coordinates": [ parameters["latitude"] , parameters["longitude"] ]
+                },
+                "distanceField": "dist.calculated",
+                "maxDistance": parameters["distance"]
+                }
+        },
+        {
+            "$match": {
+                "date" : {
+                    "$gte": ordered_dates[0],
+                    "$lte": ordered_dates[1]
+                }
             }
         },
         {"$count": "count"}
