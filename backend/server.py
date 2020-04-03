@@ -67,8 +67,8 @@ def all_crimes_near_location():
     return bson_to_json_response(bson_data)
 
 # Route for all crimes near location for month endpoint
-@app.route('/all-crimes-near-location-for-month')
-def all_crimes_near_location_for_month():
+@app.route('/crimes-near-location-in-month')
+def crimes_near_location_in_month():
     # Detail required parameters
     required_params = [ 
                         {"name": "longitude", "type": "longitude"},
@@ -85,20 +85,28 @@ def all_crimes_near_location_for_month():
         return jsonify(parameters)
     
     # Otherwise, create a query dict for MongoDB
-    query = {
-        "location": {
-            "$near": {
-            "$geometry": {
-                "type": "Point" ,
-                "coordinates": [ parameters["longitude"] , parameters["latitude"] ]
-            },
-            "$maxDistance": parameters["distance"]
+    query = [
+        {
+            "$geoNear": {
+                "near": {
+                    "type": "Point" ,
+                    "coordinates": [ parameters["latitude"] , parameters["longitude"] ]
+                },
+                "distanceField": "dist.calculated",
+                "maxDistance": parameters["distance"]
+                }
+        },
+        {
+            "$match": {
+                "date" : {
+                    "$eq": parameters["date"]
+                }
             }
         }
-    }
+    ]
 
     # Use Query on crimes collection
-    bson_data = crimes_collection.find(query)
+    bson_data = crimes_collection.aggregate(query)
     # Return the flask json response with returned data from MongoDB
     return bson_to_json_response(bson_data)
 
