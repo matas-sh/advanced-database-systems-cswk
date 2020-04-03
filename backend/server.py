@@ -41,7 +41,7 @@ def all_crime_types():
 
 # Get all dates in DB
 @app.route('/all-dates')
-def all_crime_types():
+def all_dates():
     crime_types = crimes_collection.distinct("date", {})
     return bson_to_json_response(crime_types)
 
@@ -725,12 +725,9 @@ if __name__ == '__main__':
     client = pymongo.MongoClient("mongodb://localhost:27017/")
     police_db = client["police"]
     crimes_collection = police_db["crimes"]
-    # crime_types = all_crime_types()
-    # print(crime_types)
+
     # Create a sanitiser object
     sanitiser = Sanitiser()
-
+   
     # Run the backend server
     app.run(host='0.0.0.0', debug=True)
-
-    
