@@ -39,6 +39,18 @@ def all_crime_types():
     crime_types = crimes_collection.distinct("crime_type", {})
     return bson_to_json_response(crime_types)
 
+# Get all dates in DB
+@app.route('/all-dates')
+def all_crime_types():
+    crime_types = crimes_collection.distinct("date", {})
+    return bson_to_json_response(crime_types)
+
+# Get all falls within locations in DB
+@app.route('/all-falls-within-location')
+def all_falls_within_location():
+    crime_types = crimes_collection.distinct("falls_within", {})
+    return bson_to_json_response(crime_types)
+
 
 # Route for all crimes near location endpoint
 @app.route('/all-crimes-near-location')
