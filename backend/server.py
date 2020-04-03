@@ -39,6 +39,18 @@ def all_crime_types():
     crime_types = crimes_collection.distinct("crime_type", {})
     return bson_to_json_response(crime_types)
 
+# Get all dates in DB
+@app.route('/all-dates')
+def all_dates():
+    crime_types = crimes_collection.distinct("date", {})
+    return bson_to_json_response(crime_types)
+
+# Get all falls within locations in DB
+@app.route('/all-falls-within-location')
+def all_falls_within_location():
+    crime_types = crimes_collection.distinct("falls_within", {})
+    return bson_to_json_response(crime_types)
+
 
 # Route for all crimes near location endpoint
 @app.route('/all-crimes-near-location')
@@ -127,9 +139,7 @@ def all_crimes_in_month():
 
     # Form Query
     query = {
-        "date" : {
-            "$eq": parameters["date"]
-        }
+        "date" : parameters["date"]
     }
 
     # Send Query and jsonify response
@@ -152,14 +162,82 @@ def all_crimes_in_month_count():
 
     # Form Query
     query = {
-        "date" : {
-            "$eq": parameters["date"]
-        }
+        "date" : parameters["date"]
     }
 
     # Send Query and jsonify response
     count = crimes_collection.count(query)
     return bson_to_json_response([{"count": count}])
+
+
+# Route for all crimes in date range endpoint
+@app.route('/all-crimes-in-date-range')
+def all_crimes_in_date_range():
+    # Set the required parameters
+    required_params = [ 
+                        {"name": "date1", "type": "date"},
+                        {"name": "date2", "type": "date"}
+                    ]
+    # Get sanitised query parameters
+    parameters = sanitiser.get_sanitised_params(request.args, required_params)
+
+    # Check if parameters have no errors
+    if "Invalid Request" in parameters:
+        return jsonify(parameters)
+
+    # Sort dates by time
+    ordered_dates = sorted(list(parameters.values()))
+
+    # Form Query
+    query = [
+        {
+            "$match": {
+                "date" : {
+                    "$gte": ordered_dates[0],
+                    "$lte": ordered_dates[1]
+                }
+            }
+        }
+    ]
+
+    # Send Query and jsonify response
+    bson_data = crimes_collection.aggregate(query)
+    return bson_to_json_response(bson_data)
+
+# Route for all crimes in date range endpoint
+@app.route('/all-crimes-in-date-range-count')
+def all_crimes_in_date_range_count():
+    # Set the required parameters
+    required_params = [ 
+                        {"name": "date1", "type": "date"},
+                        {"name": "date2", "type": "date"}
+                    ]
+    # Get sanitised query parameters
+    parameters = sanitiser.get_sanitised_params(request.args, required_params)
+
+    # Check if parameters have no errors
+    if "Invalid Request" in parameters:
+        return jsonify(parameters)
+    
+    # Sort the dates by time
+    ordered_dates = sorted(list(parameters.values()))
+
+    # Form Query
+    query = [
+        {
+            "$match": {
+                "date" : {
+                    "$gte": ordered_dates[0],
+                    "$lte": ordered_dates[1]
+                }
+            }
+        },
+        {"$count": "count"}
+    ]
+
+    # Send Query and jsonify response
+    bson_data = crimes_collection.aggregate(query)
+    return bson_to_json_response(bson_data)
 
 
 # Route for all crimes by type for the endpoint
@@ -179,9 +257,7 @@ def all_crimes_by_type():
 
     # Form Query
     query = {
-        "crime_type" : {
-            "$eq": parameters["crime-type"]
-        }
+        "crime_type" : parameters["crime-type"]
     }
 
     # Send Query and jsonify response
@@ -205,9 +281,7 @@ def all_crimes_by_type_count():
 
     # Form Query
     query = {
-        "crime_type" : {
-            "$eq": parameters["crime-type"]
-        }
+        "crime_type" : parameters["crime-type"]
     }
 
     # Send Query and jsonify response
@@ -247,9 +321,7 @@ def crimes_near_location_in_month():
         },
         {
             "$match": {
-                "date" : {
-                    "$eq": parameters["date"]
-                }
+                "date" : parameters["date"]
             }
         }
     ]
@@ -291,8 +363,106 @@ def crimes_near_location_in_month_count():
         },
         {
             "$match": {
+                "date" : parameters["date"]
+            }
+        },
+        {"$count": "count"}
+    ]
+
+    # Use Query on crimes collection
+    bson_data = crimes_collection.aggregate(query)
+    # Return the flask json response with returned data from MongoDB
+    return bson_to_json_response(bson_data)
+
+
+# Route for all crimes near location in date range endpoint
+@app.route('/crimes-near-location-in-date-range')
+def crimes_near_location_in_date_range():
+    # Detail required parameters
+    required_params = [ 
+                        {"name": "longitude", "type": "longitude"},
+                        {"name": "latitude", "type": "latitude"},
+                        {"name": "distance", "type": "distance"},
+                        {"name": "date1", "type": "date"},
+                        {"name": "date2", "type": "date"}
+                    ]
+
+    # Get sanitised query paramteres using Sanitiser and required_params
+    parameters = sanitiser.get_sanitised_params(request.args, required_params)
+
+    # If there are any errors with query parameters, return the error instead
+    if "Invalid Request" in parameters:
+        return jsonify(parameters)
+
+    # Sort dates by time
+    ordered_dates = sorted([parameters["date1"], parameters["date2"]])
+    
+    # Otherwise, create a query dict for MongoDB
+    query = [
+        {
+            "$geoNear": {
+                "near": {
+                    "type": "Point" ,
+                    "coordinates": [ parameters["latitude"] , parameters["longitude"] ]
+                },
+                "distanceField": "dist.calculated",
+                "maxDistance": parameters["distance"]
+                }
+        },
+        {
+            "$match": {
                 "date" : {
-                    "$eq": parameters["date"]
+                    "$gte": ordered_dates[0],
+                    "$lte": ordered_dates[1]
+                }
+            }
+        }
+    ]
+
+    # Use Query on crimes collection
+    bson_data = crimes_collection.aggregate(query)
+    # Return the flask json response with returned data from MongoDB
+    return bson_to_json_response(bson_data)
+
+# Route for all crimes near location in date range count endpoint
+@app.route('/crimes-near-location-in-date-range-count')
+def crimes_near_location_in_date_range_count():
+    # Detail required parameters
+    required_params = [ 
+                        {"name": "longitude", "type": "longitude"},
+                        {"name": "latitude", "type": "latitude"},
+                        {"name": "distance", "type": "distance"},
+                        {"name": "date1", "type": "date"},
+                        {"name": "date2", "type": "date"}
+                    ]
+
+    # Get sanitised query paramteres using Sanitiser and required_params
+    parameters = sanitiser.get_sanitised_params(request.args, required_params)
+
+    # If there are any errors with query parameters, return the error instead
+    if "Invalid Request" in parameters:
+        return jsonify(parameters)
+
+    # Sort dates by time
+    ordered_dates = sorted([parameters["date1"], parameters["date2"]])
+    
+    # Otherwise, create a query dict for MongoDB
+    query = [
+        {
+            "$geoNear": {
+                "near": {
+                    "type": "Point" ,
+                    "coordinates": [ parameters["latitude"] , parameters["longitude"] ]
+                },
+                "distanceField": "dist.calculated",
+                "maxDistance": parameters["distance"]
+                }
+        },
+        {
+            "$match": {
+                "date" : {
+                    "$gte": ordered_dates[0],
+                    "$lte": ordered_dates[1]
                 }
             }
         },
@@ -337,9 +507,7 @@ def crimes_near_location_by_type():
         },
         {
             "$match": {
-                "crime_type" : {
-                    "$eq": parameters["crime-type"]
-                }
+                "crime_type" : parameters["crime-type"]
             }
         }
     ]
@@ -381,9 +549,7 @@ def crimes_near_location_by_type_count():
         },
         {
             "$match": {
-                "crime_type" : {
-                    "$eq": parameters["crime-type"]
-                }
+                "crime_type" : parameters["crime-type"]
             }
         },
         {"$count": "count"}
@@ -411,25 +577,13 @@ def crimes_in_month_by_type():
         return jsonify(parameters)
 
     # Form Query
-    query = [
-        {
-            "$match": {
-                 "date" : {
-                    "$eq": parameters["date"]
-                }
-            }
-        },
-        {
-            "$match": {
-                "crime_type" : {
-                    "$eq": parameters["crime-type"]
-                }
-            }
-        }
-    ]
+    query = {
+            "date" : parameters["date"],
+            "crime_type": parameters["crime-type"]
+    }
 
     # Send Query and jsonify response
-    bson_data = crimes_collection.aggregate(query)
+    bson_data = crimes_collection.find(query)
     return bson_to_json_response(bson_data)
 
 # Get all crimes in month by type count
@@ -448,27 +602,14 @@ def crimes_in_month_by_type_count():
         return jsonify(parameters)
 
     # Form Query
-    query = [
-        {
-            "$match": {
-                 "date" : {
-                    "$eq": parameters["date"]
-                }
-            }
-        },
-        {
-            "$match": {
-                "crime_type" : {
-                    "$eq": parameters["crime-type"]
-                }
-            }
-        },
-        {"$count": "count"}
-    ]
+    query = {
+        "date" : parameters["date"],
+        "crime_type": parameters["crime-type"]
+    }
 
     # Send Query and jsonify response
-    bson_data = crimes_collection.aggregate(query)
-    return bson_to_json_response(bson_data)
+    count = crimes_collection.count(query)
+    return bson_to_json_response([{"count": count}])
 
 
 # Route for all crimes near location in month by type endpoint
@@ -504,16 +645,12 @@ def crimes_near_location_in_month_by_type():
         },
         {
             "$match": {
-                 "date" : {
-                    "$eq": parameters["date"]
-                }
+                 "date" : parameters["date"]
             }
         },
         {
             "$match": {
-                "crime_type" : {
-                    "$eq": parameters["crime-type"]
-                }
+                "crime_type" : parameters["crime-type"]
             }
         }
     ]
@@ -556,16 +693,12 @@ def crimes_near_location_in_month_by_type_count():
         },
         {
             "$match": {
-                 "date" : {
-                    "$eq": parameters["date"]
-                }
+                 "date" : parameters["date"]
             }
         },
         {
             "$match": {
-                "crime_type" : {
-                    "$eq": parameters["crime-type"]
-                }
+                "crime_type" : parameters["crime-type"]
             }
         },
         {"$count": "count"}
@@ -592,12 +725,9 @@ if __name__ == '__main__':
     client = pymongo.MongoClient("mongodb://localhost:27017/")
     police_db = client["police"]
     crimes_collection = police_db["crimes"]
-    # crime_types = all_crime_types()
-    # print(crime_types)
+
     # Create a sanitiser object
     sanitiser = Sanitiser()
-
+   
     # Run the backend server
     app.run(host='0.0.0.0', debug=True)
-
-    
