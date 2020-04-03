@@ -3,10 +3,7 @@ from flask_cors import CORS
 from bson import json_util
 
 import pymongo
-import pprint
 import json
-
-import time
 
 from sanitiser import Sanitiser
 
