@@ -158,6 +158,76 @@ def all_crimes_in_month_count():
     return bson_to_json_response([{"count": count}])
 
 
+# Route for all crimes in date range endpoint
+@app.route('/all-crimes-in-date-range')
+def all_crimes_in_date_range():
+    # Set the required parameters
+    required_params = [ 
+                        {"name": "date1", "type": "date"},
+                        {"name": "date2", "type": "date"}
+                    ]
+    # Get sanitised query parameters
+    parameters = sanitiser.get_sanitised_params(request.args, required_params)
+
+    # Check if parameters have no errors
+    if "Invalid Request" in parameters:
+        return jsonify(parameters)
+
+    # Sort dates by time
+    ordered_dates = sorted(list(parameters.values()))
+
+    # Form Query
+    query = [
+        {
+            "$match": {
+                "date" : {
+                    "$gte": ordered_dates[0],
+                    "$lte": ordered_dates[1]
+                }
+            }
+        },
+    ]
+
+    # Send Query and jsonify response
+    bson_data = crimes_collection.aggregate(query)
+    return bson_to_json_response(bson_data)
+
+# Route for all crimes in date range endpoint
+@app.route('/all-crimes-in-date-range-count')
+def all_crimes_in_date_range_count():
+    # Set the required parameters
+    required_params = [ 
+                        {"name": "date1", "type": "date"},
+                        {"name": "date2", "type": "date"}
+                    ]
+    # Get sanitised query parameters
+    parameters = sanitiser.get_sanitised_params(request.args, required_params)
+
+    # Check if parameters have no errors
+    if "Invalid Request" in parameters:
+        return jsonify(parameters)
+    
+    # Sort the dates by time
+    ordered_dates = sorted(list(parameters.values()))
+
+    # Form Query
+    query = [
+        {
+            "$match": {
+                "date" : {
+                    "$gte": ordered_dates[0],
+                    "$lte": ordered_dates[1]
+                }
+            }
+        },
+        {"$count": "count"}
+    ]
+
+    # Send Query and jsonify response
+    bson_data = crimes_collection.aggregate(query)
+    return bson_to_json_response(bson_data)
+
+
 # Route for all crimes by type for the endpoint
 @app.route('/all-crimes-by-type')
 def all_crimes_by_type():
