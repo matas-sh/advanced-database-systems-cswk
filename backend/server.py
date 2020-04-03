@@ -6,6 +6,8 @@ import pymongo
 import pprint
 import json
 
+import time
+
 from sanitiser import Sanitiser
 
 # Create the flask server
@@ -30,6 +32,12 @@ def bson_to_json_response(bson_data):
 @app.route('/')
 def index():
     return "Nothing is here yet"
+
+# Get all types of crime in DB
+@app.route('/all-crime-types')
+def all_crime_types():
+    crime_types = crimes_collection.distinct("crime_type", {})
+    return bson_to_json_response(crime_types)
 
 # Route for all crimes near location endpoint
 @app.route('/all-crimes-near-location')
@@ -65,6 +73,57 @@ def all_crimes_near_location():
     bson_data = crimes_collection.find(query)
     # Return the flask json response with returned data from MongoDB
     return bson_to_json_response(bson_data)
+
+# Route for all crimes count for month endpoint
+@app.route('/all-crimes-in-month-count')
+def all_crimes_in_month_count():
+    # Set the required parameters
+    required_params = [ 
+                        {"name": "date", "type": "date"}
+                    ]
+    # Get sanitised query parameters
+    parameters = sanitiser.get_sanitised_params(request.args, required_params)
+
+    # Check if parameters have no errors
+    if "Invalid Request" in parameters:
+        return jsonify(parameters)
+
+    # Form Query
+    query = {
+        "date" : {
+            "$eq": parameters["date"]
+        }
+    }
+
+    # Send Query and jsonify response
+    count = crimes_collection.count(query)
+    return bson_to_json_response([{"count": count}])
+
+# Route for all crimes by type for the endpoint
+@app.route('/all-crimes-by-type-count')
+def all_crimes_by_type_count():
+    # Set the required parameters
+    required_params = [
+        {"name": "crime-type", "type": "crime-type"}
+    ]
+    
+    # Get sanitised query parameters
+    parameters = sanitiser.get_sanitised_params(request.args, required_params)
+
+    # Check if parameters have no errors
+    if "Invalid Request" in parameters:
+        return jsonify(parameters)
+
+    # Form Query
+    query = {
+        "crime_type" : {
+            "$eq": parameters["crime-type"]
+        }
+    }
+
+    # Send Query and jsonify response
+    count = crimes_collection.count(query)
+    return bson_to_json_response([{"count": count}])
 
 # Route for all crimes near location for month endpoint
 @app.route('/crimes-near-location-in-month')
@@ -110,42 +169,6 @@ def crimes_near_location_in_month():
     # Return the flask json response with returned data from MongoDB
     return bson_to_json_response(bson_data)
 
-# Route for all crimes count for month endpoint
-@app.route('/all-crimes-in-month-count')
-def all_crimes_in_month_count():
-    # Set the required parameters
-    required_params = [ 
-                        {"name": "date", "type": "date"}
-                    ]
-    # Get sanitised query parameters
-    parameters = sanitiser.get_sanitised_params(request.args, required_params)
-
-    # Check if parameters have no errors
-    if "Invalid Request" in parameters:
-        return jsonify(parameters)
-
-    # Form Query
-    query = [
-        {
-            "$match": {
-                "date" : {
-                    "$eq": parameters["date"]
-                }
-            }
-        },
-        {"$count": "count"}
-    ]
-
-    # Send Query and jsonify response
-    bson_data = crimes_collection.aggregate(query)
-    return bson_to_json_response(bson_data)
-
-
-# @app.route('/crime-types')
-def all_crime_types():
-    crime_types = crimes_collection.distinct("crime_type", {})
-    return list(crime_types)
-
 @app.route('/crimes-in-month-by-type')
 def crimes_in_month_by_type():
     # Set the required parameters
@@ -153,6 +176,7 @@ def crimes_in_month_by_type():
         {"name": "crime-type", "type": "crime-type"},
         {"name": "date", "type": "date"}
     ]
+    
     # Get sanitised query parameters
     parameters = sanitiser.get_sanitised_params(request.args, required_params)
     # Check if parameters have no errors
@@ -176,41 +200,10 @@ def crimes_in_month_by_type():
             }
         }
     ]
+
     # Send Query and jsonify response
     bson_data = crimes_collection.aggregate(query)
-
     return bson_to_json_response(bson_data)
-
-
-# Route for all crimes by type for the endpoint
-@app.route('/all-crimes-by-type-count')
-def all_crimes_by_type_count():
-    # Set the required parameters
-    required_params = [
-        {"name": "crime-type", "type": "crime-type"}
-    ]
-    # Get sanitised query parameters
-    parameters = sanitiser.get_sanitised_params(request.args, required_params)
-    # Check if parameters have no errors
-    if "Invalid Request" in parameters:
-        return jsonify(parameters)
-
-    # Form Query
-    query = [
-        {
-            "$match": {
-                "crime_type" : {
-                    "$eq": parameters["crime-type"]
-                }
-            }
-        },
-        {"$count": "count"}
-    ]
-    # Send Query and jsonify response
-    bson_data = crimes_collection.aggregate(query)
-
-    return bson_to_json_response(bson_data)
-
 
 @app.route('/test')
 def test():
