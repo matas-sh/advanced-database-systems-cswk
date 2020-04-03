@@ -3,13 +3,10 @@ import PropTypes from 'prop-types';
 
 export const SearchContext = React.createContext();
 
-/**
- * Intial state setup with empty objects.
- */
 const initialState = {
-  location: [52.4866322, -1.8925337],
-  error: null,
-  loading: false,
+  searchForDate1: null,
+  searchForDate2: null,
+  searchForCrimeType: [],
 };
 
 /**
