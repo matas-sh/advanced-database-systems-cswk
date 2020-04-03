@@ -127,9 +127,7 @@ def all_crimes_in_month():
 
     # Form Query
     query = {
-        "date" : {
-            "$eq": parameters["date"]
-        }
+        "date" : parameters["date"]
     }
 
     # Send Query and jsonify response
@@ -152,9 +150,7 @@ def all_crimes_in_month_count():
 
     # Form Query
     query = {
-        "date" : {
-            "$eq": parameters["date"]
-        }
+        "date" : parameters["date"]
     }
 
     # Send Query and jsonify response
@@ -179,9 +175,7 @@ def all_crimes_by_type():
 
     # Form Query
     query = {
-        "crime_type" : {
-            "$eq": parameters["crime-type"]
-        }
+        "crime_type" : parameters["crime-type"]
     }
 
     # Send Query and jsonify response
@@ -205,9 +199,7 @@ def all_crimes_by_type_count():
 
     # Form Query
     query = {
-        "crime_type" : {
-            "$eq": parameters["crime-type"]
-        }
+        "crime_type" : parameters["crime-type"]
     }
 
     # Send Query and jsonify response
@@ -247,9 +239,7 @@ def crimes_near_location_in_month():
         },
         {
             "$match": {
-                "date" : {
-                    "$eq": parameters["date"]
-                }
+                "date" : parameters["date"]
             }
         }
     ]
@@ -291,9 +281,7 @@ def crimes_near_location_in_month_count():
         },
         {
             "$match": {
-                "date" : {
-                    "$eq": parameters["date"]
-                }
+                "date" : parameters["date"]
             }
         },
         {"$count": "count"}
@@ -337,9 +325,7 @@ def crimes_near_location_by_type():
         },
         {
             "$match": {
-                "crime_type" : {
-                    "$eq": parameters["crime-type"]
-                }
+                "crime_type" : parameters["crime-type"]
             }
         }
     ]
@@ -381,9 +367,7 @@ def crimes_near_location_by_type_count():
         },
         {
             "$match": {
-                "crime_type" : {
-                    "$eq": parameters["crime-type"]
-                }
+                "crime_type" : parameters["crime-type"]
             }
         },
         {"$count": "count"}
@@ -411,25 +395,13 @@ def crimes_in_month_by_type():
         return jsonify(parameters)
 
     # Form Query
-    query = [
-        {
-            "$match": {
-                 "date" : {
-                    "$eq": parameters["date"]
-                }
-            }
-        },
-        {
-            "$match": {
-                "crime_type" : {
-                    "$eq": parameters["crime-type"]
-                }
-            }
-        }
-    ]
+    query = {
+            "date" : parameters["date"],
+            "crime_type": parameters["crime-type"]
+    }
 
     # Send Query and jsonify response
-    bson_data = crimes_collection.aggregate(query)
+    bson_data = crimes_collection.find(query)
     return bson_to_json_response(bson_data)
 
 # Get all crimes in month by type count
@@ -448,27 +420,14 @@ def crimes_in_month_by_type_count():
         return jsonify(parameters)
 
     # Form Query
-    query = [
-        {
-            "$match": {
-                 "date" : {
-                    "$eq": parameters["date"]
-                }
-            }
-        },
-        {
-            "$match": {
-                "crime_type" : {
-                    "$eq": parameters["crime-type"]
-                }
-            }
-        },
-        {"$count": "count"}
-    ]
+    query = {
+        "date" : parameters["date"],
+        "crime_type": parameters["crime-type"]
+    }
 
     # Send Query and jsonify response
-    bson_data = crimes_collection.aggregate(query)
-    return bson_to_json_response(bson_data)
+    count = crimes_collection.count(query)
+    return bson_to_json_response([{"count": count}])
 
 
 # Route for all crimes near location in month by type endpoint
@@ -504,16 +463,12 @@ def crimes_near_location_in_month_by_type():
         },
         {
             "$match": {
-                 "date" : {
-                    "$eq": parameters["date"]
-                }
+                 "date" : parameters["date"]
             }
         },
         {
             "$match": {
-                "crime_type" : {
-                    "$eq": parameters["crime-type"]
-                }
+                "crime_type" : parameters["crime-type"]
             }
         }
     ]
@@ -556,16 +511,12 @@ def crimes_near_location_in_month_by_type_count():
         },
         {
             "$match": {
-                 "date" : {
-                    "$eq": parameters["date"]
-                }
+                 "date" : parameters["date"]
             }
         },
         {
             "$match": {
-                "crime_type" : {
-                    "$eq": parameters["crime-type"]
-                }
+                "crime_type" : parameters["crime-type"]
             }
         },
         {"$count": "count"}
