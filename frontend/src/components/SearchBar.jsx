@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
+import { SearchContext } from '../SearchState';
+import getLocationByString from '../api/getLocationByString';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -26,8 +28,38 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function searchForLocaton(locationString, dispatch) {
+  dispatch({
+    type: 'SET_LOADING',
+    payload: true,
+  });
+
+  console.log('this runs');
+
+  getLocationByString(locationString)
+    .then((data) => {
+      console.log(data.origin.displayLatLng);
+
+      dispatch({
+        type: 'SET_LOCATION_FOUND',
+        payload: data.origin.displayLatLng,
+      });
+    })
+    .catch((e) => {
+      console.log(e);
+
+      dispatch({
+        type: 'SET_LOADING',
+        payload: e,
+      });
+    });
+}
+
+
 export default function SearchBar() {
   const classes = useStyles();
+  const { sDispatch } = useContext(SearchContext);
+  const [fieldValue, setFieldValue] = useState('');
 
   return (
     <Paper component="form" className={classes.root}>
@@ -35,8 +67,14 @@ export default function SearchBar() {
         className={classes.input}
         placeholder="Search for address or postcode"
         inputProps={{ 'aria-label': 'search for address or post code' }}
+        onChange={(e) => setFieldValue(e.target.value)}
       />
-      <IconButton type="submit" className={classes.iconButton} aria-label="search">
+      <IconButton
+        type="submit"
+        className={classes.iconButton}
+        aria-label="search"
+        onClick={() => searchForLocaton(fieldValue, sDispatch)}
+      >
         <SearchIcon />
       </IconButton>
     </Paper>

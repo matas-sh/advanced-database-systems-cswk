@@ -1,13 +1,15 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const MapContext = React.createContext();
+export const SearchContext = React.createContext();
 
 /**
  * Intial state setup with empty objects.
  */
 const initialState = {
   location: [52.4866322, -1.8925337],
+  error: null,
+  loading: false,
 };
 
 /**
@@ -16,18 +18,22 @@ const initialState = {
  */
 const reducer = (state, action) => {
   switch (action.type) {
-    case 'SET_LOCATION':
-      return { ...state, location: action.payload };
+    case 'SET_LOCATION_FOUND':
+      return { ...state, loading: false, location: action.payload };
+    case 'SET_SEARCH_ERROR':
+      return { ...state, loading: false, error: action.payload };
+    case 'SET_LOADING':
+      return { ...state, loading: action.payload };
     default:
       return state;
   }
 };
 
 const state = ({ children }) => {
-  const [mState, mDispatch] = React.useReducer(reducer, initialState);
-  const Map = { mState, mDispatch };
+  const [sState, sDispatch] = React.useReducer(reducer, initialState);
+  const Search = { sState, sDispatch };
 
-  return <MapContext.Provider value={Map}>{children}</MapContext.Provider>;
+  return <SearchContext.Provider value={Search}>{children}</SearchContext.Provider>;
 };
 
 state.propTypes = {

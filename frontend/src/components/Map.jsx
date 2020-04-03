@@ -5,20 +5,34 @@ import {
   // Marker,
   // Popup,
 } from 'react-leaflet';
-import { MapContext } from '../State';
+import MarkerGenerator from './MarkerGenerator';
+import { SearchContext } from '../SearchState';
 import '../../style/map.scss';
 
 export default function AppMap() {
-  const { mState } = useContext(MapContext);
+  const { sState } = useContext(SearchContext);
+  const { location } = sState;
 
+  const markerData = [{
+    position: [52.486304, -1.888485],
+    popUpText: (<h1> Knifecrime </h1>),
+  }];
+
+
+  console.log('location: ', location);
   return (
-    <Map center={mState.location} zoom={12}>
+    <Map
+      center={location}
+      zoom={14}
+      animate
+    >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        minZoom={12}
+        minZoom={14}
         maxZoom={18}
       />
+      {MarkerGenerator(markerData)}
     </Map>
   );
 }

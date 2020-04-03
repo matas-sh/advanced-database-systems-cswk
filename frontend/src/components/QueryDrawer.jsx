@@ -1,13 +1,12 @@
 import React from 'react';
 import clsx from 'clsx';
 import IconButton from '@material-ui/core/IconButton';
-import { Drawer } from '@material-ui/core';
-import Button from '@material-ui/core/Button';
+import { Drawer, Divider } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 
-const drawerWidth = 240;
+const drawerWidth = 260;
 
 const styleOptions = makeStyles((theme) => ({
   root: {
@@ -81,17 +80,6 @@ const styleOptions = makeStyles((theme) => ({
   },
 }));
 
-const showLogitudeField = (boolean) => {
-  if (boolean) {
-    return (
-      <Button variant="contained" color="primary">
-        Hello Fucker
-      </Button>
-    );
-  }
-  return React.Fragment;
-};
-
 export default function PersistentDrawerLeft() {
   const classes = styleOptions();
   const theme = useTheme();
@@ -121,25 +109,7 @@ export default function PersistentDrawerLeft() {
           {open ? <ChevronLeftIcon /> : <ChevronRightIcon />}
         </IconButton>
       </div>
-      {showLogitudeField(open)}
-      {/* <Divider />
-         <List>
-          {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List> */}
-      {/* <Divider />
-        <List>
-          {['All mail', 'Trash', 'Spam'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List> */}
+      <Divider />
     </Drawer>
   );
 }

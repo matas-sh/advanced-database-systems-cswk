@@ -2,21 +2,22 @@ import React from 'react';
 import QueryDrawer from '../components/QueryDrawer';
 import SearchBar from '../components/SearchBar';
 import Map from '../components/Map';
-import State from '../State';
+import SearchState from '../SearchState';
 import '../../style/custom.scss';
+
 
 export default function RenderMap() {
   return (
     <>
-      <div id="app-grid">
-        <State>
+      <SearchState>
+        <div id="app-grid">
           <QueryDrawer />
           <Map />
-        </State>
-      </div>
-      <div id="app-search">
-        <SearchBar />
-      </div>
+        </div>
+        <div id="app-search">
+          <SearchBar />
+        </div>
+      </SearchState>
     </>
   );
 }
