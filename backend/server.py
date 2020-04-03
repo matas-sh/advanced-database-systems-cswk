@@ -20,7 +20,7 @@ This must then be re-encoded with (flask.jsonify) to create a flask json respons
 def bson_to_json_response(bson_data):
     # Create a JSON object from bson Cursor
     json_obj = json.loads(json.dumps(list(bson_data), default=json_util.default))
-    # Encodes and adds HEaders etc for flask json response
+    # Encodes and adds Headers etc for flask json response
     json_data = jsonify(json_obj)
     return json_data
 
@@ -59,7 +59,9 @@ def crimes():
 
     # If there are any errors with query parameters, return the error instead
     if "Invalid Request" in parameters:
-        return jsonify(parameters)
+        resp = jsonify(parameters)
+        resp.status_code = 400
+        return resp
 
     # Otherwise, create a query for MongoDB
     query = []
