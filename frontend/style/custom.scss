@@ -1,2 +1,12 @@
 @import "../node_modules/bootstrap/scss/bootstrap";
 
+#app-search {
+    z-index: 1300;
+    position: fixed;
+    left: 40%;
+    top: 2vh;
+}
+
+.MuiPaper-rounded {
+    border-radius: 24px;
+}
