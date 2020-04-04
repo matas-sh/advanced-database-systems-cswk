@@ -131,6 +131,20 @@ def crimes():
                 }
             }
             query.append(grouped_query)
+    # Add fields query if fields is in the parameters and no option has been set
+    elif "fields" in parameters:
+        fields = parameters["fields"]
+
+        fields_query = {
+            "$project": {
+                "_id": 0
+            }
+        }
+        # Iterate over the list of parameters nd add them to the query
+        for field in fields:
+            fields_query["$project"][field] = 1
+
+        query.append(fields_query)
 
     # Use Query on crimes collection
     bson_data = crimes_collection.aggregate(query)

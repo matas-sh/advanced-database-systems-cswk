@@ -23,6 +23,12 @@ class Sanitiser():
             'count', 'grouped'
             ],
             "allowed_mult": False
+        },
+        "fields": {"set": [
+            '_id', 'crime_type', 'falls_within', 'month', 'date', 'crime_id', 'reported_by',
+            'location', 'street_name', 'last_outcome_category', 'lsoa_code', 'lsoa_name'
+            ],
+            "allowed_mult": True
         }
     }
 
