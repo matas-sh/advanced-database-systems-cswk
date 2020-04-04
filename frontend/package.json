@@ -21,7 +21,8 @@
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.3.0",
     "sass": "^1.25.0",
-    "svg-inline-loader": "^0.8.0"
+    "svg-inline-loader": "^0.8.0",
+    "typeface-roboto": "0.0.75"
   },
   "scripts": {
     "start": "webpack-dev-server --content-base dist",

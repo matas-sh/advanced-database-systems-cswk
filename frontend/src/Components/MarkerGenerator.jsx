@@ -9,7 +9,7 @@ export function marker(markerData) {
 
   if (typeof (markerData.popUpText) !== 'undefined') {
     component = (
-      <Marker position={markerData.position}>
+      <Marker position={markerData.position} opacity={0.8}>
         <Popup>
           {markerData.popUpText}
         </Popup>

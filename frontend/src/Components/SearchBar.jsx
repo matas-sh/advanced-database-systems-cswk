@@ -5,7 +5,7 @@ import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
 import { SearchContext } from '../State/SearchState';
-import getLocationByString from '../api/getLocationByString';
+import getLocationByString from '../API/getLocationByString';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -38,7 +38,7 @@ function searchForLocaton(locationString, dispatch) {
     .then((data) => {
       dispatch({
         type: 'SET_LOCATION_FOUND',
-        payload: data.origin.displayLatLng,
+        payload: { location: data.origin.displayLatLng },
       });
     })
     .catch((e) => {

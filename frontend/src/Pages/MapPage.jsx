@@ -1,7 +1,7 @@
 import React from 'react';
-import QueryDrawer from '../components/QueryDrawer';
-import SearchBar from '../components/SearchBar';
-import Map from '../components/Map';
+import QueryDrawer from '../Components/QueryDrawer';
+import SearchBar from '../Components/SearchBar';
+import Map from '../Components/Map';
 import SearchState from '../State/SearchState';
 import '../../style/custom.scss';
 

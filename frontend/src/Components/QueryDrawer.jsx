@@ -3,10 +3,13 @@ import clsx from 'clsx';
 import IconButton from '@material-ui/core/IconButton';
 import { Drawer, Divider } from '@material-ui/core';
 import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
+import Container from '@material-ui/core/Container';
+import Box from '@material-ui/core/Box';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
+import DistanceSlider from './DistanceSlider';
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 const styleOptions = makeStyles((theme) => ({
   root: {
@@ -91,6 +94,7 @@ export default function PersistentDrawerLeft() {
   };
 
   return (
+
     <Drawer
       variant="permanent"
       className={clsx(classes.drawer, {
@@ -110,6 +114,16 @@ export default function PersistentDrawerLeft() {
         </IconButton>
       </div>
       <Divider />
+      {
+        open
+          ? (
+            <Box pt={4} pl={2} pr={2}>
+              <Container>
+                <DistanceSlider />
+              </Container>
+            </Box>
+          ) : <></>
+      }
     </Drawer>
   );
 }

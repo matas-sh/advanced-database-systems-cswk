@@ -2,8 +2,7 @@ import React, { useContext, useRef } from 'react';
 import {
   Map,
   TileLayer,
-  // Marker,
-  // Popup,
+  Circle,
 } from 'react-leaflet';
 import MarkerGenerator from './MarkerGenerator';
 import { SearchContext } from '../State/SearchState';
@@ -13,26 +12,35 @@ function changeLocation(mapRef, dispatch) {
   if (typeof (mapRef.current) !== 'undefined') {
     dispatch({
       type: 'SET_LOCATION_FOUND',
-      payload: mapRef.current.viewport.center,
+      payload: {
+        location: mapRef.current.viewport.center,
+        zoom: mapRef.current.viewport.zoom,
+      },
     });
   }
 }
 
 export default function AppMap() {
   const { sDispatch, sState } = useContext(SearchContext);
-  const { location } = sState;
+  const { location, zoom } = sState;
   const mapRef = useRef(null);
 
-
+  // market data example
   const markerData = [{
     position: [52.486304, -1.888485],
-    popUpText: (<h1> Knifecrime </h1>),
+    popUpText: (
+      <>
+        <p> knifecrime: 3</p>
+        <p> street: near or on Upon Avon</p>
+      </>
+    ),
   }];
 
+  console.log('Circle: ', Circle);
   return (
     <Map
       center={location}
-      zoom={14}
+      zoom={zoom}
       animate
       ref={mapRef}
       onMoveEnd={() => changeLocation(mapRef, sDispatch)}
@@ -40,8 +48,21 @@ export default function AppMap() {
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
         attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        minZoom={14}
+        minZoom={8}
         maxZoom={18}
+      />
+      <Circle
+        center={location}
+        radius={10000}
+        fillOpacity={0}
+        color="#52af77"
+        weight={2}
+        dashArray={5}
+        stroke={{
+          opacity: 0.5,
+          width: 2,
+        }}
+        // fillColor="#00FFFFFF"
       />
       {MarkerGenerator(markerData)}
     </Map>

@@ -28,19 +28,22 @@ module.exports = {
         ],
       },
       {
-        test: /\.s[ac]ss$/i,
+        test: /\.s[c]ss$/i,
         use: [
           'style-loader',
           'css-loader',
           'sass-loader',
         ],
       },
+      { test: /\.css$/, 
+        use: 'css-loader'
+      },
       {
         test: /\.svg$/,
         loader: 'svg-inline-loader',
       },
       {
-        test: /\.(png|jpe?g|gif|jpg)$/i,
+        test: /\.(woff(2)?|ttf|eot|png|jpe?g|gif|jpg)$/i,
         use: [
           {
             loader: 'file-loader',

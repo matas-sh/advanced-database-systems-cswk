@@ -5,6 +5,7 @@ export const SearchContext = React.createContext();
 
 const initialState = {
   location: [52.4866322, -1.8925337],
+  zoom: 14,
   loading: false,
   error: undefined,
 };
@@ -14,7 +15,7 @@ const reducer = (state, action) => {
   switch (action.type) {
     case 'SET_LOCATION_FOUND':
       return {
-        ...state, loading: false, error: undefined, location: action.payload,
+        ...state, loading: false, error: undefined, ...action.payload,
       };
     case 'SET_SEARCH_ERROR':
       return { ...state, loading: false, error: action.payload };
