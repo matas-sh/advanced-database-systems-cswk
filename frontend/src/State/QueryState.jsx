@@ -4,24 +4,27 @@ import PropTypes from 'prop-types';
 export const QueryContext = React.createContext();
 
 const initialState = {
-  date1: '2020-02',
+  date1: '2020-01',
   date2: undefined,
   position: [52.4866322, -1.8925337],
-  crimeType: [],
+  crimeType: ['Burglary'],
   distance: 5000,
-  docFields: ['crime-type', 'street-name'],
+  docFields: ['crime_type', 'street_name', 'location'],
   loading: false,
   error: undefined,
+  zoom: 14,
+  data: [],
 };
 
 const reducer = (state, action) => {
   console.log(action);
   switch (action.type) {
     case 'SET_QUERY_VALUES':
-      console.log('st: ', { ...state, ...action.payload });
       return { ...state, ...action.payload };
     case 'QUERY_COMPLETED':
-      return { ...state, loading: false, error: undefined };
+      return {
+        ...state, loading: false, error: undefined, data: action.payload,
+      };
     case 'QUERY_ERROR':
       return { ...state, loading: false, error: action.payload };
     case 'QUERY_LOADING':

@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function searchForLocaton(locationString, dispatch) {
+function searchForLocation(locationString, dispatch) {
   dispatch({
     type: 'SET_LOADING',
     payload: true,
@@ -69,7 +69,7 @@ export default function SearchBar() {
         type="submit"
         className={classes.iconButton}
         aria-label="search"
-        onClick={() => searchForLocaton(fieldValue, sDispatch)}
+        onClick={() => searchForLocation(fieldValue, sDispatch)}
       >
         <SearchIcon />
       </IconButton>

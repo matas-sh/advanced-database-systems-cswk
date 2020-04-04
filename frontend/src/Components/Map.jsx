@@ -5,27 +5,60 @@ import {
   Circle,
 } from 'react-leaflet';
 import MarkerGenerator from './MarkerGenerator';
-import { SearchContext } from '../State/SearchState';
 import { QueryContext } from '../State/QueryState';
 import '../../style/map.scss';
 
-function changeLocation(mapRef, dispatch) {
+function changeLocation(mapRef, qDispatch) {
   if (typeof (mapRef.current) !== 'undefined') {
-    dispatch({
-      type: 'SET_LOCATION_FOUND',
+    qDispatch({
+      type: 'SET_QUERY_VALUES',
       payload: {
-        location: mapRef.current.viewport.center,
+        position: mapRef.current.viewport.center,
         zoom: mapRef.current.viewport.zoom,
       },
     });
   }
 }
 
+function generateMarkerData(jsonMarkerDataList) {
+  const markerDataList = {};
+  jsonMarkerDataList.forEach((element) => {
+    if (typeof (markerDataList[element.location.coordinates]) === 'undefined') {
+      markerDataList[element.location.coordinates] = {
+        location: element.location.coordinates,
+        streetName: element.street_name,
+        [element.crime_type]: 0,
+      };
+    } else if (markerDataList.location === element.location.coordinates) {
+      if (element.crime_type in markerDataList[element.location.coordinates]) {
+        markerDataList[element.location.coordinates][element.crime_type] += 1;
+      } else {
+        markerDataList[element.location.coordinates][element.crime_type] = 0;
+      }
+    }
+    console.log('markerDataList: ', markerDataList);
+    // if(typeof(markerDataList[element['street_name']]) === 'undefined') {
+    //   markerDataList[element['street_name']] = {
+    //     location: element['location']['coordinates'],
+    //     [element['crime_type']] : 0
+    //   };
+    // } else if (markerDataList['street_name']['location'] === element['location']['coordinates']) {
+    //   if(element['crime_type'] in markerDataList[element['street_name']]) {
+    //     markerDataList[element['street_name']][element['crime_type']] +=1;
+    //   } else {
+    //     markerDataList[element['street_name']][element['crime_type']] = 0;
+    //   }
+    // } else {
+
+    // }
+
+  });
+}
+
+
 export default function AppMap() {
-  const { sDispatch, sState } = useContext(SearchContext);
-  const { qState } = useContext(QueryContext);
-  const { position, distance } = qState;
-  const { zoom } = sState;
+  const { qDispatch, qState } = useContext(QueryContext);
+  const { position, distance, zoom } = qState;
   const mapRef = useRef(null);
   console.log('qState: ', qState);
 
@@ -34,20 +67,20 @@ export default function AppMap() {
     position: [52.486304, -1.888485],
     popUpText: (
       <>
-        <p> knifecrime: 3</p>
-        <p> street: near or on Upon Avon</p>
+        <p> [drimeType]: 3</p>
+        <p> street: [streetname</p>
       </>
     ),
   }];
-
-  console.log('position: ', position);
+  // generateMarkerData(qState.data);
+  console.log('zoom: ', zoom);
   return (
     <Map
       center={position}
       zoom={zoom}
       animate
       ref={mapRef}
-      onMoveEnd={() => changeLocation(mapRef, sDispatch)}
+      onMoveEnd={() => changeLocation(mapRef, qDispatch)}
     >
       <TileLayer
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"

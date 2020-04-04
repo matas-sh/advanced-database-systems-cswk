@@ -6,20 +6,16 @@ export default async function queryBuilder(options) {
   const {
     date1,
     date2,
-    latitude,
-    longitude,
+    position,
     crimeType,
     distance,
     docFields,
   } = options;
     // isolate search results to UK only
-  const queryString = [];
+  let queryString = [];
 
-  if (typeof (latitude) !== 'undefined') {
-    queryString.push(`latitude=${latitude}`);
-  }
-  if (typeof (longitude) !== 'undefined') {
-    queryString.push(`longitude=${longitude}`);
+  if (typeof (position) !== 'undefined') {
+    queryString.push(`longitude=${position[0]}&latitude=${position[1]}`);
   }
   if (typeof (distance) !== 'undefined') {
     queryString.push(`distance=${distance}`);
@@ -34,10 +30,12 @@ export default async function queryBuilder(options) {
     queryString.push(`date2=${date2}`);
   }
   if (docFields.length) {
-    queryString.push(`doc-fields-=${docFields.join(',')}`);
+    console.log('docFields:', docFields);
+    queryString.push(`fields=${docFields.join(',')}`);
   }
 
-  queryString.join('&');
+  queryString = queryString.join('&');
+  console.log('QUERY BUILEEEEER: ', queryString);
 
   const response = await fetch(`http://${HOSTNAME}:${PORT}/crimes?${queryString}`);
   const data = await response.json();
