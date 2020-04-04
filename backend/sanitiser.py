@@ -16,11 +16,13 @@ class Sanitiser():
             'Anti-social behaviour', 'Bicycle theft', 'Burglary', 'Criminal damage and arson', 
             'Drugs', 'Other crime', 'Other theft', 'Possession of weapons', 'Public order', 
             'Robbery', 'Shoplifting', 'Theft from the person', 'Vehicle crime', 'Violence and sexual offences'
-            ]
+            ],
+            "allowed_mult": True
         },
-        "options": {"set": [
+        "option": {"set": [
             'count', 'grouped'
-            ]
+            ],
+            "allowed_mult": False
         }
     }
 
@@ -71,15 +73,19 @@ class Sanitiser():
             except FormatError:
                 # Return Custom Format Error if parameter doesn't have required format
                 parameter_format = self.requirements_info[parameter_name]["format"]
-                error_dict["Invalid Request"].setdefault("Incorrect format", list()).append(f"{parameter_name} - Expected format: ({parameter_format})  but recieved: {parameter_value}")
+                error_dict["Invalid Request"].setdefault("Incorrect format", list()).append(f"{parameter_name} - Expected format: ({parameter_format}) but recieved: {parameter_value}")
             return parameter_value
 
     def check_parameter_enum(self, parameter_name, parameter_value, error_dict):
-        if parameter_value not in self.requirements_info_enum[parameter_name]["set"]:
-            # If required type isn't in requirements_info dictionary
-            error_dict["Invalid Request"].setdefault("Unknown parameter(s)", list()).append(f"Unknown ({parameter_name}) value: {parameter_value}")
-        else:
-            return parameter_value
+        parameter_value_list = parameter_value.split(",")
+        if len(parameter_value_list) > 1 and not self.requirements_info_enum[parameter_name]["allowed_mult"]:
+            error_dict["Invalid Request"].setdefault("Too many parameters", list()).append(f"Only one ({parameter_name}) allowed but recieved: {parameter_value_list}")
+
+        for value in parameter_value_list:
+            if value not in self.requirements_info_enum[parameter_name]["set"]:
+                # If required type isn't in requirements_info dictionary
+                error_dict["Invalid Request"].setdefault("Unknown parameter(s)", list()).append(f"Unknown ({parameter_name}) value: {value}")
+        return parameter_value_list
 
     """
     Get sanitised required parameters from request_args

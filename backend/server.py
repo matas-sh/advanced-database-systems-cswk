@@ -103,23 +103,27 @@ def crimes():
 
     # Add crime type query if crime type provided
     if "crime-type" in parameters:
-        crime_type_query = {
-            "$match": {
-                "crime_type": parameters["crime-type"]
+        crime_type_query = [
+            {
+                "$match": {
+                    "crime_type":  {
+                        "$in": parameters["crime-type"]
+                    }
+                }
             }
-        }
-        query.append(crime_type_query)
+        ]
+        query.extend(crime_type_query)
 
     # If query contains options
-    if "options" in parameters:
+    if "option" in parameters:
         # Add count query
-        if parameters["options"] == "count":
+        if parameters["option"][0] == "count":
             count_query = {
                 "$count": "count"
             }
             query.append(count_query)
         # Add grouped query
-        elif parameters["options"] == "grouped":
+        elif parameters["option"][0] == "grouped":
             grouped_query = {
                 "$group": {
                     "_id": "$month", 
