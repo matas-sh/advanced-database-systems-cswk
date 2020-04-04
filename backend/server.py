@@ -14,8 +14,9 @@ CORS(app)
 # Helpers =================
 
 """
-MongoDB returns bson which must be parsed with specific json encoder (bson.json_util.default).
-This must then be re-encoded with (flask.jsonify) to create a flask json response
+MongoDB returns bson which must be parsed with specific json
+encoder (bson.json_util.default). This must then be re-encoded
+with (flask.jsonify) to create a flask json response
 """
 def bson_to_json_response(bson_data):
     # Create a JSON object from bson Cursor
@@ -72,7 +73,10 @@ def crimes():
             "$geoNear": {
                 "near": {
                     "type": "Point" ,
-                    "coordinates": [parameters["latitude"] , parameters["longitude"]]
+                    "coordinates": [
+                        parameters["latitude"],
+                        parameters["longitude"]
+                    ]
                 },
                 "distanceField": "dist.calculated",
                 "maxDistance": parameters["distance"]
@@ -82,7 +86,10 @@ def crimes():
 
     # Add date range query if two dates provided
     if "date1" in parameters and "date2" in parameters:
-        ordered_dates = sorted([parameters["date1"], parameters["date2"]])
+        ordered_dates = sorted([
+            parameters["date1"],
+            parameters["date2"]
+        ])
         date_range_query = {
             "$match": {
                 "date" : {
@@ -92,11 +99,11 @@ def crimes():
             }
         }
         query.append(date_range_query)
-    # Add single date query if only one date provided 
+    # Add single date query if only one date provided
     elif "date1" in parameters or "date2" in parameters:
         date_query = {
             "$match": {
-                "date" : parameters["date1" if "date1" in parameters else "date2"]
+                "date": parameters["date1" if "date1" in parameters else "date2"]
             }
         }
         query.append(date_query)
@@ -126,7 +133,7 @@ def crimes():
         elif parameters["option"][0] == "grouped":
             grouped_query = {
                 "$group": {
-                    "_id": "$month", 
+                    "_id": "$month",
                     "count": {"$sum": 1}
                 }
             }
@@ -162,6 +169,6 @@ if __name__ == '__main__':
 
     # Create a sanitiser object
     sanitiser = Sanitiser()
-   
+
     # Run the backend server
     app.run(host='0.0.0.0', debug=True)

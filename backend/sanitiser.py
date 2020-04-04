@@ -4,29 +4,52 @@ class Sanitiser():
 
     # Details for the parameter type requirements
     requirements_info = {
-        "longitude": {"type": "float", "bounds": (-180.0, 180.0)},
-        "latitude": {"type": "float", "bounds": (-90.0, 90.0)},
-        "distance": {"type": "int", "bounds":  (0, 10000)},
-        "date1": {"type": "date", "bounds": (dt(2018, 2, 1), dt(2020, 1, 1)), "format": "YYYY-MM"},
-        "date2": {"type": "date", "bounds": (dt(2018, 2, 1), dt(2020, 1, 1)), "format": "YYYY-MM"}
+        "longitude": {
+            "type": "float",
+            "bounds": (-180.0, 180.0)
+        },
+        "latitude": {
+            "type": "float",
+            "bounds": (-90.0, 90.0)
+        },
+        "distance": {
+            "type": "int",
+            "bounds": (0, 10000)
+        },
+        "date1": {
+            "type": "date",
+            "bounds": (dt(2018, 2, 1), dt(2020, 1, 1)),
+            "format": "YYYY-MM"
+        },
+        "date2": {
+            "type": "date",
+            "bounds": (dt(2018, 2, 1), dt(2020, 1, 1)),
+            "format": "YYYY-MM"
+        }
     }
 
     requirements_info_enum = {
-        "crime-type": {"set": [
-            'Anti-social behaviour', 'Bicycle theft', 'Burglary', 'Criminal damage and arson', 
-            'Drugs', 'Other crime', 'Other theft', 'Possession of weapons', 'Public order', 
-            'Robbery', 'Shoplifting', 'Theft from the person', 'Vehicle crime', 'Violence and sexual offences'
+        "crime-type": {
+            "set": [
+                'Anti-social behaviour', 'Bicycle theft', 'Burglary',
+                'Criminal damage and arson', 'Drugs', 'Other crime',
+                'Other theft', 'Possession of weapons', 'Public order',
+                'Robbery', 'Shoplifting', 'Theft from the person',
+                'Vehicle crime', 'Violence and sexual offences'
             ],
             "allowed_mult": True
         },
-        "option": {"set": [
-            'count', 'grouped'
+        "option": {
+            "set": [
+                'count', 'grouped'
             ],
             "allowed_mult": False
         },
-        "fields": {"set": [
-            '_id', 'crime_type', 'falls_within', 'month', 'date', 'crime_id', 'reported_by',
-            'location', 'street_name', 'last_outcome_category', 'lsoa_code', 'lsoa_name'
+        "fields": {
+            "set": [
+                '_id', 'crime_type', 'falls_within', 'month', 'date',
+                'crime_id', 'reported_by', 'location', 'street_name',
+                'last_outcome_category', 'lsoa_code', 'lsoa_name'
             ],
             "allowed_mult": True
         }
@@ -38,16 +61,18 @@ class Sanitiser():
     Args:
     parameter_name -- The name of the parameter that is being checked.
     parameter_value -- The value of the parameter that is being checked.
-    error_dict -- The dictionary of errors, any new errors with parameter is appended.
+    error_dict -- The dictionary of errors, append any new parameter errors.
     """
     def check_parameter(self, parameter_name, parameter_value, error_dict):
         if parameter_name in self.requirements_info:
-            # Get the type and bounds of the parameter from the requirements_info dictionary
+            # Get the type and bounds of the parameter from
+            # the requirements_info dictionary
             required_type = self.requirements_info[parameter_name]["type"]
             required_bounds = self.requirements_info[parameter_name]["bounds"]
 
             try:
-                # Try to parse the type into the type from the requirements_info dictionary
+                # Try to parse the type into the type from
+                # the requirements_info dictionary
                 if required_type == "float":
                     parameter_value = float(parameter_value)
 
@@ -55,7 +80,8 @@ class Sanitiser():
                     parameter_value = int(parameter_value)
 
                 elif required_type == "date":
-                    # For dates, input must be split by "-" and meet a required format before formatting
+                    # For dates, input must be split by "-" and meet a required
+                    # format before formatting
                     year_month = parameter_value.split("-")
                     if len(year_month) < 2:
                         # If the format requirement wasn't met, raise FormatError
@@ -68,11 +94,11 @@ class Sanitiser():
                 else:
                     # If required type isn't in requirements_info dictionary
                     print(f"Unknown expected type: {required_type}")
-                
+
                 # Check if parsed value is within the required bounds
                 if not (parameter_value >= required_bounds[0] and parameter_value <= required_bounds[1]):
                     # Add Out of bounds Error if parameter is outside required bounds
-                    error_dict["Invalid Request"].setdefault("Out of Bounds Error", list()).append(f"{parameter_name} - Must be ({required_bounds[0]} <= x <= {required_bounds[1]}) but recieved: {parameter_value}")  
+                    error_dict["Invalid Request"].setdefault("Out of Bounds Error", list()).append(f"{parameter_name} - Must be ({required_bounds[0]} <= x <= {required_bounds[1]}) but recieved: {parameter_value}")
             except ValueError:
                 # Return Type Error if parameter couldn't be parsed to required type
                 error_dict["Invalid Request"].setdefault("Type Error", list()).append(f"{parameter_name} - Expected type ({required_type}) but recieved: {parameter_value}")
