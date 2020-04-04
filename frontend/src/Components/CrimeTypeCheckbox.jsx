@@ -1,28 +1,35 @@
 import React from 'react';
 import FormGroup from '@material-ui/core/FormGroup';
-import FormLabel from '@material-ui/core/FormLabel';
+// import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import Typography from '@material-ui/core/Typography';
-import { withStyles } from '@material-ui/core/styles';
+import Checkbox from '@material-ui/core/Checkbox';
+import { makeStyles } from '@material-ui/core/styles';
 import 'typeface-roboto';
+import '../../style/custom.scss';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     color: '#52af77',
-    height: 8,
     display: 'flex',
+    paddingLeft: 2,
+    paddingRight: 2,
   },
-  formControl: {
-    margin: theme.spacing(3),
+  FormControl: {
+    margin: theme.spacing(1),
+  },
+  Checkbox: {
+    color: '#52af77',
+  },
+  FormControlLabel: {
+    color: '#52af77',
   },
 }));
 
 export default function CheckboxesGroup() {
-
   const classes = useStyles();
   const [state, setState] = React.useState({
-    all: true,
     antiSocialBehaviour: true,
     bicycleTheft: true,
     burglary: true,
@@ -36,28 +43,23 @@ export default function CheckboxesGroup() {
     shoplifting: true,
     theftFromThePerson: true,
     vehicleCrime: true,
-    violenceAndSexualOffences: true
+    violenceAndSexualOffences: true,
   });
 
   const handleChange = (event) => {
     setState({ ...state, [event.target.name]: event.target.checked });
   };
 
-  const { gilad, jason, antoine } = state;
+  const {
+    antiSocialBehaviour, bicycleTheft, burglary, criminalDamageAndArson, drugs, otherCrime,
+    otherTheft, possessionOfWeapons, publicOrder, robbery, shoplifting, theftFromThePerson,
+    vehicleCrime, violenceAndSexualOffences,
+  } = state;
 
   return (
-    <div className={classes.root}>
+    <>
       <FormControl component="fieldset" className={classes.formControl}>
-        <FormLabel component="legend">Select All</FormLabel>
-        <FormGroup>
-          <FormControlLabel
-            control={<Checkbox checked={all} onChange={handleChange} name="all" />}
-            label="All"
-          />
-        </FormGroup>
-      </FormControl>
-      <FormControl component="fieldset" className={classes.formControl}>
-        <FormLabel component="legend">Select Crime Types</FormLabel>
+        <Typography component="span" fontWeight={600} variant="subtitle2"> Select Crime Types </Typography>
         <FormGroup>
           <FormControlLabel
             control={<Checkbox checked={antiSocialBehaviour} onChange={handleChange} name="antiSocialBehaviour" />}
@@ -116,8 +118,7 @@ export default function CheckboxesGroup() {
             label="Violence And Sexual Offences"
           />
         </FormGroup>
-        <FormHelperText>You can display an error</FormHelperText>
       </FormControl>
-    </div>
+    </>
   );
 }
