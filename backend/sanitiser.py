@@ -18,8 +18,8 @@ class Sanitiser():
             'Robbery', 'Shoplifting', 'Theft from the person', 'Vehicle crime', 'Violence and sexual offences'
             ]
         },
-        "count": {"set": [
-            'true', 'false'
+        "options": {"set": [
+            'count', 'grouped'
             ]
         }
     }

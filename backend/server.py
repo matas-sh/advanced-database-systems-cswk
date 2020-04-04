@@ -110,13 +110,23 @@ def crimes():
         }
         query.append(crime_type_query)
 
-    # Add count query if True (should be last)
-    if "count" in parameters:
-        if parameters["count"] == "true":
+    # If query contains options
+    if "options" in parameters:
+        # Add count query
+        if parameters["options"] == "count":
             count_query = {
                 "$count": "count"
             }
             query.append(count_query)
+        # Add grouped query
+        elif parameters["options"] == "grouped":
+            grouped_query = {
+                "$group": {
+                    "_id": "$month", 
+                    "count": {"$sum": 1}
+                }
+            }
+            query.append(grouped_query)
 
     # Use Query on crimes collection
     bson_data = crimes_collection.aggregate(query)
