@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useContext, useRef } from 'react';
 import Slider from '@material-ui/core/Slider';
 import Box from '@material-ui/core/Box';
 import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
+import { QueryContext } from '../State/QueryState';
 import 'typeface-roboto';
 
 const marks = [
@@ -16,6 +17,7 @@ const marks = [
     label: '10000 m',
   },
 ];
+
 
 const SliderWithStyles = withStyles({
   root: {
@@ -47,14 +49,36 @@ const SliderWithStyles = withStyles({
   },
 })(Slider);
 
+function changeSearchRadius(value, e, qDispatch) {
+  qDispatch({ type: 'SET_QUERY_VALUES', payload: { distance: value } });
+}
+
+
 export default function DistanceSlider() {
+  const { qDispatch } = useContext(QueryContext);
+  const sliderRef = useRef(null);
   return (
     <>
       <Box pt={2} pl={2} pr={2}>
-        <Typography component="span" fontWeight={600} variant="subtitle2">Distance slider</Typography>
+        <Typography
+          component="span"
+          fontWeight={600}
+          variant="subtitle2"
+        >
+          Distance slider
+        </Typography>
       </Box>
       <Container>
-        <SliderWithStyles marks={marks} valueLabelDisplay="auto" aria-label="distance slider" min={0} max={10000} defaultValue={5000} />
+        <SliderWithStyles
+          marks={marks}
+          ref={sliderRef}
+          valueLabelDisplay="auto"
+          aria-label="distance slider"
+          onChange={(e, value) => { changeSearchRadius(value, e, qDispatch); }}
+          min={0}
+          max={10000}
+          defaultValue={5000}
+        />
       </Container>
     </>
   );
