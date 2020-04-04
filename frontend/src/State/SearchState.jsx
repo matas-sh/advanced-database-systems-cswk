@@ -7,6 +7,7 @@ const initialState = {
   location: [52.4866322, -1.8925337],
   zoom: 14,
   loading: false,
+  radius: 5000,
   error: undefined,
 };
 
@@ -21,6 +22,8 @@ const reducer = (state, action) => {
       return { ...state, loading: false, error: action.payload };
     case 'SET_LOADING':
       return { ...state, loading: action.payload };
+    case 'SET_RADIUS':
+      return { ...state, radius: action.payload };
     default:
       return state;
   }

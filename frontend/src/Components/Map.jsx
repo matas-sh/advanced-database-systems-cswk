@@ -6,6 +6,7 @@ import {
 } from 'react-leaflet';
 import MarkerGenerator from './MarkerGenerator';
 import { SearchContext } from '../State/SearchState';
+import { QueryContext } from '../State/QueryState';
 import '../../style/map.scss';
 
 function changeLocation(mapRef, dispatch) {
@@ -22,8 +23,11 @@ function changeLocation(mapRef, dispatch) {
 
 export default function AppMap() {
   const { sDispatch, sState } = useContext(SearchContext);
-  const { location, zoom } = sState;
+  const { qState } = useContext(QueryContext);
+  const { position, distance } = qState;
+  const { zoom } = sState;
   const mapRef = useRef(null);
+  console.log('qState: ', qState);
 
   // market data example
   const markerData = [{
@@ -36,10 +40,10 @@ export default function AppMap() {
     ),
   }];
 
-  console.log('Circle: ', Circle);
+  console.log('position: ', position);
   return (
     <Map
-      center={location}
+      center={position}
       zoom={zoom}
       animate
       ref={mapRef}
@@ -52,8 +56,8 @@ export default function AppMap() {
         maxZoom={18}
       />
       <Circle
-        center={location}
-        radius={10000}
+        center={position}
+        radius={distance}
         fillOpacity={0}
         color="#52af77"
         weight={2}

@@ -10,3 +10,9 @@
 .MuiPaper-rounded {
     border-radius: 24px;
 }
+.MuiSlider-mark {
+    display: none;
+}
+.MuiSlider-mark.MuiSlider-markActive {
+    display: none;
+}

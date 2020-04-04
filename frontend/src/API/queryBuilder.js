@@ -41,5 +41,6 @@ export default async function queryBuilder(options) {
 
   const response = await fetch(`http://${HOSTNAME}:${PORT}/crimes?${queryString}`);
   const data = await response.json();
+
   return data;
 }
