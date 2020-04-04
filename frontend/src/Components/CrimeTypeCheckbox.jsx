@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext, useState } from 'react';
 import FormGroup from '@material-ui/core/FormGroup';
 // import FormLabel from '@material-ui/core/FormLabel';
 import FormControl from '@material-ui/core/FormControl';
@@ -27,8 +27,33 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+const checkboxList = [
+  {
+    name: "antiSocialBehaviour",
+    checked: "antiSocialBehaviour",
+    label: "Anti-social Behaviour",
+  },
+  {
+    name: 'check-box-2',
+    key: 'checkBox2',
+    label: 'Check Box 2',
+  },
+  {
+    name: 'check-box-3',
+    key: 'checkBox3',
+    label: 'Check Box 3',
+  },
+  {
+    name: 'check-box-4',
+    key: 'checkBox4',
+    label: 'Check Box 4',
+  },
+];
+
 export default function CheckboxesGroup() {
   const classes = useStyles();
+  const { sDispatch } = useContext(SearchContext);
+  const [fieldValue, setFieldValue] = useState('');
   const [state, setState] = React.useState({
     antiSocialBehaviour: true,
     bicycleTheft: true,
@@ -61,10 +86,12 @@ export default function CheckboxesGroup() {
       <FormControl component="fieldset" className={classes.formControl}>
         <Typography component="span" fontWeight={600} variant="subtitle2"> Select Crime Types </Typography>
         <FormGroup>
+          {checkboxList.map(element => (
           <FormControlLabel
-            control={<Checkbox checked={antiSocialBehaviour} onChange={handleChange} name="antiSocialBehaviour" />}
-            label="Anti-social Behaviour"
+            control={<Checkbox checked={antiSocialBehaviour} onChange={handleChange} name={element.name} />}
+            label={element.label}
           />
+          }
           <FormControlLabel
             control={<Checkbox checked={bicycleTheft} onChange={handleChange} name="bicycleTheft" />}
             label="Bicycle Theft"
