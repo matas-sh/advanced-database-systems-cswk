@@ -8,6 +8,7 @@ import Box from '@material-ui/core/Box';
 import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import DistanceSlider from './DistanceSlider';
+import CrimeTypeCheckbox from './CrimeTypeCheckbox';
 
 const drawerWidth = 280;
 
@@ -117,11 +118,16 @@ export default function PersistentDrawerLeft() {
       {
         open
           ? (
-            <Box pt={4} pl={2} pr={2}>
-              <Container>
+            <>
+              <Box pt={2} pl={2} pr={2}>
                 <DistanceSlider />
-              </Container>
-            </Box>
+              </Box>
+              <Box pt={2}>
+                <Container>
+                  <CrimeTypeCheckbox />
+                </Container>
+              </Box>
+            </>
           ) : <></>
       }
     </Drawer>

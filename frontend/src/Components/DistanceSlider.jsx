@@ -1,5 +1,7 @@
 import React, { useContext, useRef } from 'react';
 import Slider from '@material-ui/core/Slider';
+import Box from '@material-ui/core/Box';
+import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import { withStyles } from '@material-ui/core/styles';
 import { QueryContext } from '../State/QueryState';
@@ -57,23 +59,27 @@ export default function DistanceSlider() {
   const sliderRef = useRef(null);
   return (
     <>
-      <Typography
-        component="span"
-        fontWeight={600}
-        variant="subtitle2"
-      >
-            Distance slider
-      </Typography>
-      <SliderWithStyles
-        marks={marks}
-        ref={sliderRef}
-        valueLabelDisplay="auto"
-        aria-label="distance slider"
-        onChange={(e, value) => { changeSearchRadius(value, e, qDispatch); }}
-        min={0}
-        max={10000}
-        defaultValue={5000}
-      />
+      <Box pt={2} pl={2} pr={2}>
+        <Typography
+          component="span"
+          fontWeight={600}
+          variant="subtitle2"
+        >
+          Distance slider
+        </Typography>
+      </Box>
+      <Container>
+        <SliderWithStyles
+          marks={marks}
+          ref={sliderRef}
+          valueLabelDisplay="auto"
+          aria-label="distance slider"
+          onChange={(e, value) => { changeSearchRadius(value, e, qDispatch); }}
+          min={0}
+          max={10000}
+          defaultValue={5000}
+        />
+      </Container>
     </>
   );
 }
