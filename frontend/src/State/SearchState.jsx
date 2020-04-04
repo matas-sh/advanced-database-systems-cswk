@@ -3,23 +3,19 @@ import PropTypes from 'prop-types';
 
 export const SearchContext = React.createContext();
 
-/**
- * Intial state setup with empty objects.
- */
 const initialState = {
   location: [52.4866322, -1.8925337],
-  error: null,
   loading: false,
+  error: undefined,
 };
 
-/**
- * Reducer function for easily accessing context state outside of provider.
- * Used by consumers that subscribe to this.
- */
 const reducer = (state, action) => {
+  console.log('wtf');
   switch (action.type) {
     case 'SET_LOCATION_FOUND':
-      return { ...state, loading: false, location: action.payload };
+      return {
+        ...state, loading: false, error: undefined, location: action.payload,
+      };
     case 'SET_SEARCH_ERROR':
       return { ...state, loading: false, error: action.payload };
     case 'SET_LOADING':
