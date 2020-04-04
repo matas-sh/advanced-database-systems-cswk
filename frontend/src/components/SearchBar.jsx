@@ -4,7 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
-import { SearchContext } from '../SearchState';
+import { SearchContext } from '../State/SearchState';
 import getLocationByString from '../api/getLocationByString';
 
 const useStyles = makeStyles((theme) => ({
@@ -34,12 +34,8 @@ function searchForLocaton(locationString, dispatch) {
     payload: true,
   });
 
-  console.log('this runs');
-
   getLocationByString(locationString)
     .then((data) => {
-      console.log(data.origin.displayLatLng);
-
       dispatch({
         type: 'SET_LOCATION_FOUND',
         payload: data.origin.displayLatLng,
@@ -49,7 +45,7 @@ function searchForLocaton(locationString, dispatch) {
       console.log(e);
 
       dispatch({
-        type: 'SET_LOADING',
+        type: 'SET_SEARCH_ERROR',
         payload: e,
       });
     });
