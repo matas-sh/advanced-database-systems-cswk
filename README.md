@@ -6,7 +6,7 @@ A frontend and backend for querying and displaying data on crimes in the UK prov
 ## MongoDB
 Relies on a Hyper-V VM hosting a Mongo Database, accessible on local network (mongodb://localhost:27017/). VM can be found on SSD returned in the root directory, and can be imported into Hyper-V using the Hyper-V Manager. In the `Actions` tab of Hyper-V Manager, there will be an `Import Virtual Machine...` option. After selecting this, navigate to the SSD and __select the Mongo folder in the root directory__. Then follow the steps detailed in the setup wizard. You should then be able to start the VM in Hyper-V Manager by selecting the Mongo VM in the `Virtual Machines` section and choosing `Start`
 
-If you receive an error about the VM being unable to connect to the network switch, you will be prompted to update the network switch in the import wizard. Simply follow the instructions to set it to your own network switch. 
+If you receive an error about the VM being unable to connect to the network switch, you will be prompted to update the network switch in the import wizard. Simply follow the instructions to set it to your own network switch.
 
 ## Backend
 The Backend is a Python Flask server which interacts with the database via PyMongo. It builds queries based on the query parameters provided and returns the resulting data in a json format. All inputted query parameters are sanitised and checked before being used in database queries. If any issue exists with a query parameter, the database is not queried and a detailed error message is returned in json format. All query parameters are completely checked before returning an error message, so the error message contains __ALL__ issues with query parameters in the request.
@@ -19,6 +19,8 @@ Once the requirements are installed, you can start the server with:
 ```bash
 py server.py
 ```
+Which should start the server on port `5000`.
+
 To test that the server has started up correctly, you can open a browser and go to:
 ```url
 http://{VM_IP}:5000/ping
@@ -74,14 +76,14 @@ The Frontend is a Webpack server that collects all the source code and bundles i
 
 (this assumes that the machine has either yarn or npm installed and that the node module packages for frontend have been installed). For machines other than this virtual machine the user would have to install those packages with `npm install` or `yarn install`. As the server is a combination of Webpack, React and many other JavaScript packages.
 
-To start the server the user has to move to the `./frontend` directory via command:
-```
+To start the server the user has to move to the `~/Projects/adavanced-database-systems-cswk/frontend` directory via command:
+```bash
 cd ../frontend
 ```
-and then run the fallowing command: 
-```
+and then run the fallowing command:
+```bash
 npm start
-``` 
-This will start the bundling process and once finished will display `Compiled successfully` message at the bottom of the logs in the terminal. 
+```
+This will start the bundling process and once finished will display `Compiled successfully` message at the bottom of the logs in the terminal.
 
 Once compiled, the UI will be available on the network at fallowing url that can be accessed via browser -  `http://{VM_IP}:9000/`
