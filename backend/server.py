@@ -129,15 +129,53 @@ def crimes():
                 "$count": "count"
             }
             query.append(count_query)
-        # Add grouped query
-        elif parameters["option"][0] == "grouped":
-            grouped_query = {
+        # Add grouped by month query
+        elif parameters["option"][0] == "grouped-month":
+            grouped_month_query = {
                 "$group": {
                     "_id": "$month",
                     "count": {"$sum": 1}
                 }
             }
-            query.append(grouped_query)
+            query.append(grouped_month_query)
+        # Add grouped by location query
+        elif parameters["option"][0] == "grouped-location":
+            grouped_location_query = [
+                {
+                    "$group": {
+                        "_id": {"location": "$location", "crime-type": "$crime_type"},
+                        "location_total": {"$sum": 1},
+                    }
+                },
+                {
+                    "$project": {
+                        "location": "$_id.location",
+                        "crime-type": "$_id.crime-type",
+                        "count": { "$toString": "$location_total" },
+                        "location_total": "$location_total",
+                        "_id": 0
+                    }
+                },
+                {
+                    "$project": {
+                        "crime-and-loc": {
+                            "$concat": ["$crime-type", ": ", "$count"]
+                        },
+                        "location": 1,
+                        "location_total": 1
+                    }
+                },
+                {
+                    "$group": {
+                        "_id": "$location",
+                        "location_total": {"$sum": "$location_total"},
+                        "crime-types": {
+                            "$addToSet": "$crime-and-loc"
+                        }
+                    }
+                }
+            ]
+            query.extend(grouped_location_query)
     # Add fields query if fields is in the parameters and no option has been set
     elif "fields" in parameters:
         fields = parameters["fields"]
@@ -147,7 +185,7 @@ def crimes():
                 "_id": 0
             }
         }
-        # Iterate over the list of parameters nd add them to the query
+        # Iterate over the list of parameters and add them to the query
         for field in fields:
             fields_query["$project"][field] = 1
 

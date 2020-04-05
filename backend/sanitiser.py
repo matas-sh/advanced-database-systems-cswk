@@ -41,7 +41,7 @@ class Sanitiser():
         },
         "option": {
             "set": [
-                'count', 'grouped'
+                'count', 'grouped-month', 'grouped-location'
             ],
             "allowed_mult": False
         },
