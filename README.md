@@ -37,13 +37,38 @@ These are all the endpoints made available by the API:
 * `/all-falls-within-location` - GEts a list of distinct locations that crimes fall within.
 * `/ping` - Returns if server is up.
 
-
 ### Query Parameters
-To query the MongoDB through the backend you can hit the `/crimes` endpoint with any combination of the available query parameters:
-* `latitude` - Sets the latitude
+To query the MongoDB through the backend you can hit the `/crimes` endpoint with any combination of the available query parameters (All locations parameters are required):
+* `latitude` - Sets the latitude (REQUIRED)
+* `longitude` - Sets the longitude (REQUIRED)
+* `distance` - Sets the radius around the LatLong point to query (REQUIRED)
+* `date1` - Sets the month to query for.
+* `date2` - Sets the month to query for (If used in combination with date1, will query for inclusive date range).
+* `crime-type` - Limits the type of crime returned by crime-type list provided. If not set, returns all crime-types.
+* `option` - Sets option parameters (Only one option allowed):
+  * `count` - Returns a count of the crimes instead of the doc.
+  * `grouped-month` - Returns a count of crimes for each month.
+  * `grouped-location` - Returns a count of crimes for each type present grouped by location with street name included (Used in frontend map).
+* `fields` - Limit the response to contain only the fields requested in list provided (Ignored if an option is set).
+
+### Examples
+Some sample queries to test functionality. Replace {VM_IP} with your VM's IP.
+
+```
+http://{VM_IP}:5000/crimes?latitude=51.6238441467285&longitude=0.431697010993958&distance=1000
+```
+```
+http://{VM_IP}:5000/crimes?latitude=51.6238441467285&longitude=0.431697010993958&distance=1000&date1=2018-02&crime-type=Anti-social%20behaviour,Burglary
+```
+```
+http://{VM_IP}:5000/crimes?latitude=51.6238441467285&longitude=0.431697010993958&distance=1000&date2=2019-07&option=grouped-location
+```
+```
+http://{VM_IP}:5000/crimes?latitude=51.6238441467285&longitude=0.431697010993958&distance=5000&date2=2019-07&option=count
+```
 
 ## Frontend
 The Frontend is a Webpack server that collects all the source code and bundles in a single file that get sent to the user's browser once a request to the server is made via port `9000`. There after, the the browser sends GET requests to Flask server via port `5000` using source code to retrieve any data it needs for rendering the UI.
 
-To start the start user needs to move to the 
+To start the start user needs to move to the
 Because the frontend is a combination of React and many other packages, to ensure that the server runs user needs
