@@ -51,6 +51,7 @@ export function marker(markerData) {
         position={[markerData.position[1], markerData.position[0]]}
         key={markerData.position}
         opacity={0.8}
+        autoPan
       >
         <Popup>
           {markerData.popUpText}

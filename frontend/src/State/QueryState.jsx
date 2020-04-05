@@ -19,7 +19,6 @@ const initialState = {
 const reducer = (state, action) => {
   switch (action.type) {
     case 'SET_QUERY_VALUES':
-      console.log('action payload: ', action.payload);
       return { ...state, ...action.payload };
     case 'QUERY_COMPLETED':
       return {
