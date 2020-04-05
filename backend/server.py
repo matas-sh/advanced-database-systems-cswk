@@ -145,6 +145,7 @@ def crimes():
                     "$group": {
                         "_id": {"location": "$location", "crime-type": "$crime_type"},
                         "location_total": {"$sum": 1},
+                        "street-name": {"$first": "$street_name"}
                     }
                 },
                 {
@@ -153,7 +154,9 @@ def crimes():
                         "crime-type": "$_id.crime-type",
                         "count": { "$toString": "$location_total" },
                         "location_total": "$location_total",
+                        "street-name": "$street-name",
                         "_id": 0
+
                     }
                 },
                 {
@@ -162,12 +165,13 @@ def crimes():
                             "$concat": ["$crime-type", ": ", "$count"]
                         },
                         "location": 1,
-                        "location_total": 1
+                        "location_total": 1,
+                        "street-name": 1
                     }
                 },
                 {
                     "$group": {
-                        "_id": "$location",
+                        "_id": {"location": "$location", "street-name": "$street-name"},
                         "location_total": {"$sum": "$location_total"},
                         "crime-types": {
                             "$addToSet": "$crime-and-loc"
