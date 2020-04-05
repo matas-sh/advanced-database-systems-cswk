@@ -200,6 +200,11 @@ def crimes():
     # Return the flask json response with returned data from MongoDB
     return bson_to_json_response(bson_data)
 
+# Get all types of crime in DB
+@app.route('/ping')
+def ping():
+    return jsonify({"pong": "status up"})
+
 # RUN =================
 
 if __name__ == '__main__':
