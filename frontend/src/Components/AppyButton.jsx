@@ -5,7 +5,6 @@ import { QueryContext } from '../State/QueryState';
 import queryBuilder from '../API/queryBuilder';
 
 function queryDatabse(dispatch, state) {
-  console.log('qState: ', state);
   dispatch({ type: 'QUERY_LOADING' });
   queryBuilder(state)
     .then((data) => {

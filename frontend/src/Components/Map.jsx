@@ -26,7 +26,6 @@ export default function AppMap() {
   const { position, distance, zoom } = qState;
   const mapRef = useRef(null);
 
-  console.log('zoom: ', zoom);
   return (
     <Map
       center={position}

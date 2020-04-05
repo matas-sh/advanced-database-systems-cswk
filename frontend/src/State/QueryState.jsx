@@ -8,8 +8,8 @@ const initialState = {
   date2: undefined,
   position: [52.4866322, -1.8925337],
   crimeType: new Set(['Burglary', 'Robbery']),
-  distance: 5000,
-  docFields: ['crime_type', 'street_name', 'location'],
+  distance: 2000,
+  option: 'grouped-location',
   loading: false,
   error: undefined,
   zoom: 14,
@@ -17,9 +17,9 @@ const initialState = {
 };
 
 const reducer = (state, action) => {
-  console.log(action);
   switch (action.type) {
     case 'SET_QUERY_VALUES':
+      console.log('action payload: ', action.payload);
       return { ...state, ...action.payload };
     case 'QUERY_COMPLETED':
       return {

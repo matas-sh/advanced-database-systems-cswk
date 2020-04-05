@@ -30,11 +30,11 @@ const useStyles = makeStyles((theme) => ({
 const checkboxList = [
   {
     name: 'antiSocialBehaviour',
-    label: 'Anti-social Behaviour',
+    label: 'Anti-social behaviour',
   },
   {
     name: 'bicycleTheft',
-    label: 'Bicycle Theft',
+    label: 'Bicycle theft',
   },
   {
     name: 'burglary',
@@ -42,7 +42,7 @@ const checkboxList = [
   },
   {
     name: 'criminalDamageAndArson',
-    label: 'Criminal Damage And Arson',
+    label: 'Criminal damage and arson',
   },
   {
     name: 'drugs',
@@ -50,19 +50,19 @@ const checkboxList = [
   },
   {
     name: 'otherCrime',
-    label: 'Other Crime',
+    label: 'Other crime',
   },
   {
     name: 'otherTheft',
-    label: 'Other Theft',
+    label: 'Other theft',
   },
   {
     name: 'possessionOfWeapons',
-    label: 'Possession Of Weapons',
+    label: 'Possession of weapons',
   },
   {
     name: 'publicOrder',
-    label: 'Public Order',
+    label: 'Public order',
   },
   {
     name: 'robbery',
@@ -74,15 +74,15 @@ const checkboxList = [
   },
   {
     name: 'theftFromThePerson',
-    label: 'Theft From The Person',
+    label: 'Theft from the person',
   },
   {
     name: 'vehicleCrime',
-    label: 'Vehicle Crime',
+    label: 'Vehicle crime',
   },
   {
     name: 'violenceAndSexualOffences',
-    label: 'Violence And Sexual Offences',
+    label: 'Violence and sexual offences',
   },
 ];
 

@@ -7,40 +7,35 @@ import { QueryContext } from '../State/QueryState';
 
 
 function generateMarkerData(jsonMarkerDataList) {
-  const markerDataList = {};
-  const markerDataListArray = [];
-  console.log('SOSOSOSOSOSOSOSOSOSOSOS');
+  const markerDataListArray = jsonMarkerDataList.map((elem) => {
+    const PopUpString = elem['crime-types'].map((crimeType) => (
+      <>
+        <span>
+          {' '}
+          {crimeType}
+          {' '}
 
-  jsonMarkerDataList.forEach((element) => {
-    if (typeof (markerDataList[element.location.coordinates]) === 'undefined') {
-      markerDataList[element.location.coordinates] = {
-        location: element.location.coordinates,
-        streetName: element.street_name,
-        [element.crime_type]: 1,
-      };
-    } else if (markerDataList.location === element.location.coordinates) {
-      if (element.crime_type in markerDataList[element.location.coordinates]) {
-        markerDataList[element.location.coordinates][element.crime_type] += 1;
-      } else {
-        markerDataList[element.location.coordinates][element.crime_type] = 1;
-      }
-    }
-  });
-  let i = 0;
-  Object.keys(markerDataList).forEach((key) => {
-    const popUpString = [];
-    let a = 0;
-    Object.keys(markerDataList[key]).forEach((crimeKey) => {
-      if (crimeKey !== 'location') {
-        popUpString[a] = (`${crimeKey}: ${markerDataList[key][crimeKey]}`);
-        a += 1;
-      }
-    });
-    markerDataListArray[i] = {
-      position: markerDataList[key].location,
-      popUpText: popUpString.join('\n'),
+        </span>
+        {' '}
+        <br />
+      </>
+    ));
+    return {
+      /* eslint-disable no-underscore-dangle */
+      position: elem._id.location.coordinates,
+      /* eslint-disable no-underscore-dangle */
+      popUpText: (
+        <>
+          <span>
+            {' '}
+            {elem._id['street-name']}
+            {' '}
+          </span>
+          {' '}
+          <br />
+          {PopUpString}
+        </>),
     };
-    i += 1;
   });
 
   return markerDataListArray;
@@ -74,11 +69,8 @@ export function marker(markerData) {
 }
 
 export default function MarkerGenerator() {
-  const { qDispatch, qState } = useContext(QueryContext);
-  console.log('data: ', qDispatch, qState);
-  const { data } = qState;
-  console.log('data: ', qDispatch, qState);
-  const markerData = generateMarkerData(data);
+  const { qState } = useContext(QueryContext);
+  const markerData = generateMarkerData(qState.data);
 
   return (
     <>

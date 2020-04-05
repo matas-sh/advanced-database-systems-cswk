@@ -9,10 +9,11 @@ export default async function queryBuilder(options) {
     position,
     crimeType,
     distance,
-    docFields,
+    option,
   } = options;
     // isolate search results to UK only
   let queryString = [];
+  console.log('running query builder');
 
   if (typeof (position) !== 'undefined') {
     queryString.push(`longitude=${position[1]}&latitude=${position[0]}`);
@@ -20,8 +21,10 @@ export default async function queryBuilder(options) {
   if (typeof (distance) !== 'undefined') {
     queryString.push(`distance=${distance}`);
   }
-  if (crimeType.length) {
-    queryString.push(`crime-type=${crimeType.join(',')}`);
+  console.log('crimeType.size: ', crimeType.size);
+  if (crimeType.size > 0 && crimeType.size < 11) {
+    console.log('crimeType.values().join ', Array.from(crimeType.values()).join(','));
+    queryString.push(`crime-type=${Array.from(crimeType.values()).join(',')}`);
   }
   if (typeof (date1) !== 'undefined') {
     queryString.push(`date1=${date1}`);
@@ -29,9 +32,9 @@ export default async function queryBuilder(options) {
   if (typeof (date2) !== 'undefined') {
     queryString.push(`date2=${date2}`);
   }
-  if (docFields.length) {
-    console.log('docFields:', docFields);
-    queryString.push(`fields=${docFields.join(',')}`);
+  if (typeof (option) !== 'undefined') {
+    console.log('option:', option);
+    queryString.push(`option=${option}`);
   }
 
   queryString = queryString.join('&');
