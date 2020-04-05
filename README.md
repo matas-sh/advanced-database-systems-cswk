@@ -38,14 +38,14 @@ These are all the endpoints made available by the API:
 * `/all-crime-types` - Gets a list of distinct crime types in the DB.
 * `/all-dates` - Gets a list of distinct date objects.
 * `/all-year-months` - Gets a list of distinct dates (YYYY-MM) format.
-* `/all-falls-within-location` - GEts a list of distinct locations that crimes fall within.
+* `/all-falls-within-location` - Gets a list of distinct locations that crimes fall within.
 * `/ping` - Returns if server is up.
 
 ### Query Parameters
 To query the MongoDB through the backend you can hit the `/crimes` endpoint with any combination of the available query parameters (All locations parameters are required):
 * `latitude` - Sets the latitude (REQUIRED)
 * `longitude` - Sets the longitude (REQUIRED)
-* `distance` - Sets the radius around the LatLong point to query (REQUIRED)
+* `distance` - Sets the radius around the Lat-Long point to query (REQUIRED)
 * `date1` - Sets the month to query for.
 * `date2` - Sets the month to query for (If used in combination with date1, will query for inclusive date range).
 * `crime-type` - Limits the type of crime returned by crime-type list provided. If not set, returns all crime-types.
@@ -72,7 +72,7 @@ http://{VM_IP}:5000/crimes?latitude=51.6238441467285&longitude=0.431697010993958
 ```
 
 ## Frontend
-The Frontend is a Webpack server that collects all the source code and bundles in a single file that get sent to the user's browser once a request to the server is made via port `9000`. There after, the the browser sends GET requests to Flask server via port `5000` using source code to retrieve any data it needs for rendering the UI.
+The Frontend is a Webpack server that collects all the source code and bundles in a single file that get sent to the user's browser once a request to the server is made via port `9000`. Thereafter, the browser sends GET requests to Flask server via port `5000` using source code to retrieve any data it needs for rendering the UI.
 
 (this assumes that the machine has either yarn or npm installed and that the node module packages for frontend have been installed). For machines other than this virtual machine the user would have to install those packages with `npm install` or `yarn install`. As the server is a combination of Webpack, React and many other JavaScript packages.
 
@@ -86,5 +86,5 @@ npm start
 ```
 This will start the bundling process and once finished will display `Compiled successfully` message at the bottom of the logs in the terminal.
 
-Once compiled, the UI will be available on the network at fallowing url that can be accessed via browser:
+Once compiled, the UI will be available on the network at following URL that can be accessed via browser:
 ```http://{VM_IP}:9000/```
