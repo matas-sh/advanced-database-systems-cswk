@@ -129,6 +129,9 @@ class Sanitiser():
         # Get parameters as dictionary
         recieved_params = dict(request_args)
 
+        if not all(location_parameter in request_args for location_parameter in ["longitude", "latitude", "distance"]):
+             errors["Invalid Request"].setdefault("Missing required parameters.", list()).append(f"Parameters must include: Latitude, Longitude and Distance")
+
         # For each parameter we require, check if it meets requirements and
         # convert it from a string to the correct type.
         # Modifies error message with all issues with the parameters provided.
@@ -140,7 +143,7 @@ class Sanitiser():
             else:
                 errors["Invalid Request"].setdefault("Unknown parameter(s)", list()).append(f"Paramter ({parameter_name}) not recognised")
 
-        # If anything errored, return the error message
+        # If anything errors, return the error message
         if errors["Invalid Request"]:
             return errors
         else:

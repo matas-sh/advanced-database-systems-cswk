@@ -67,22 +67,21 @@ def crimes():
     # Otherwise, create a query for MongoDB
     query = []
 
-    # Add location query if all params present ("$geoNear" must be first)
-    if all(location_parameter in parameters for location_parameter in ["longitude", "latitude", "distance"]):
-        location_query = {
-            "$geoNear": {
-                "near": {
-                    "type": "Point" ,
-                    "coordinates": [
-                        parameters["longitude"],
-                        parameters["latitude"]
-                    ]
-                },
-                "distanceField": "dist.calculated",
-                "maxDistance": parameters["distance"]
-                }
-        }
-        query.append(location_query)
+    # Always add the location query ("$geoNear" must be first)
+    location_query = {
+        "$geoNear": {
+            "near": {
+                "type": "Point" ,
+                "coordinates": [
+                    parameters["longitude"],
+                    parameters["latitude"]
+                ]
+            },
+            "distanceField": "dist.calculated",
+            "maxDistance": parameters["distance"]
+            }
+    }
+    query.append(location_query)
 
     # Add date range query if two dates provided
     if "date1" in parameters and "date2" in parameters:
