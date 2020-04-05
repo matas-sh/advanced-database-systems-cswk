@@ -13,8 +13,8 @@ const marks = [
     label: '0 m',
   },
   {
-    value: 4000,
-    label: '4000 m',
+    value: 3000,
+    label: '3000 m',
   },
 ];
 
@@ -76,8 +76,8 @@ export default function DistanceSlider() {
           aria-label="distance slider"
           onChange={(e, value) => { changeSearchRadius(value, e, qDispatch); }}
           min={0}
-          max={4000}
-          defaultValue={2000}
+          max={3000}
+          defaultValue={1500}
         />
       </Container>
     </>

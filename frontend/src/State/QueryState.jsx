@@ -8,7 +8,7 @@ const initialState = {
   date2: undefined,
   position: [52.4866322, -1.8925337],
   crimeType: new Set(['Burglary', 'Robbery']),
-  distance: 2000,
+  distance: 1500,
   option: 'grouped-location',
   loading: false,
   error: undefined,
