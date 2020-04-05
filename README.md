@@ -7,7 +7,7 @@ A frontend and backend for querying and displaying data on crimes in the UK prov
 Relies on a Hyper-V VM hosting a Mongo Database, accessible on local network (mongodb://localhost:27017/).
 
 ## Backend
-The Backend is a Python Flask server which interacts with the database via PyMongo. It builds queries based on the query parameters provided and returns the resulting data in a json format. All inputted query parameters are sanitised and checked before being used in database queries. If any issue exists with a query parameter, the database is not queried and a detailed error message is returned in json format. All query parameters are completely checked before returning an error message, so the error message contains __ALL__ issues with query paramteres in the request.
+The Backend is a Python Flask server which interacts with the database via PyMongo. It builds queries based on the query parameters provided and returns the resulting data in a json format. All inputted query parameters are sanitised and checked before being used in database queries. If any issue exists with a query parameter, the database is not queried and a detailed error message is returned in json format. All query parameters are completely checked before returning an error message, so the error message contains __ALL__ issues with query parameters in the request.
 
 To start the backend server, you first need Python3 and Pip3 to run the application and manage dependencies. If these are available, move to the `backend/` directory and install all the requirements with Pip3:
 ```bash
