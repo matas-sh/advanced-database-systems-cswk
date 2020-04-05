@@ -74,8 +74,8 @@ def crimes():
                 "near": {
                     "type": "Point" ,
                     "coordinates": [
-                        parameters["latitude"],
-                        parameters["longitude"]
+                        parameters["longitude"],
+                        parameters["latitude"]
                     ]
                 },
                 "distanceField": "dist.calculated",

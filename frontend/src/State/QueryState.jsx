@@ -7,7 +7,7 @@ const initialState = {
   date1: '2020-01',
   date2: undefined,
   position: [52.4866322, -1.8925337],
-  crimeType: ['Burglary'],
+  crimeType: new Set(['Burglary', 'Robbery']),
   distance: 5000,
   docFields: ['crime_type', 'street_name', 'location'],
   loading: false,

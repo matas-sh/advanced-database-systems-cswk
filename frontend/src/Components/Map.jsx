@@ -20,59 +20,12 @@ function changeLocation(mapRef, qDispatch) {
   }
 }
 
-function generateMarkerData(jsonMarkerDataList) {
-  const markerDataList = {};
-  jsonMarkerDataList.forEach((element) => {
-    if (typeof (markerDataList[element.location.coordinates]) === 'undefined') {
-      markerDataList[element.location.coordinates] = {
-        location: element.location.coordinates,
-        streetName: element.street_name,
-        [element.crime_type]: 0,
-      };
-    } else if (markerDataList.location === element.location.coordinates) {
-      if (element.crime_type in markerDataList[element.location.coordinates]) {
-        markerDataList[element.location.coordinates][element.crime_type] += 1;
-      } else {
-        markerDataList[element.location.coordinates][element.crime_type] = 0;
-      }
-    }
-    console.log('markerDataList: ', markerDataList);
-    // if(typeof(markerDataList[element['street_name']]) === 'undefined') {
-    //   markerDataList[element['street_name']] = {
-    //     location: element['location']['coordinates'],
-    //     [element['crime_type']] : 0
-    //   };
-    // } else if (markerDataList['street_name']['location'] === element['location']['coordinates']) {
-    //   if(element['crime_type'] in markerDataList[element['street_name']]) {
-    //     markerDataList[element['street_name']][element['crime_type']] +=1;
-    //   } else {
-    //     markerDataList[element['street_name']][element['crime_type']] = 0;
-    //   }
-    // } else {
-
-    // }
-
-  });
-}
-
 
 export default function AppMap() {
   const { qDispatch, qState } = useContext(QueryContext);
   const { position, distance, zoom } = qState;
   const mapRef = useRef(null);
-  console.log('qState: ', qState);
 
-  // market data example
-  const markerData = [{
-    position: [52.486304, -1.888485],
-    popUpText: (
-      <>
-        <p> [drimeType]: 3</p>
-        <p> street: [streetname</p>
-      </>
-    ),
-  }];
-  // generateMarkerData(qState.data);
   console.log('zoom: ', zoom);
   return (
     <Map
@@ -101,7 +54,7 @@ export default function AppMap() {
         }}
         // fillColor="#00FFFFFF"
       />
-      {MarkerGenerator(markerData)}
+      <MarkerGenerator />
     </Map>
   );
 }

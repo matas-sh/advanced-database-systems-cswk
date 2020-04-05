@@ -135,8 +135,10 @@ class Sanitiser():
         for parameter_name, parameter_value in recieved_params.items():
             if parameter_name in self.requirements_info_enum:
                 recieved_params[parameter_name] = self.check_parameter_enum(parameter_name, parameter_value, errors)
-            else:
+            elif parameter_name in self.requirements_info:
                 recieved_params[parameter_name] = self.check_parameter(parameter_name, parameter_value, errors)
+            else:
+                errors["Invalid Request"].setdefault("Unknown parameter(s)", list()).append(f"Paramter ({parameter_name}) not recognised")
 
         # If anything errored, return the error message
         if errors["Invalid Request"]:

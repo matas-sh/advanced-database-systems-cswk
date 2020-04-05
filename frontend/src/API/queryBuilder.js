@@ -15,7 +15,7 @@ export default async function queryBuilder(options) {
   let queryString = [];
 
   if (typeof (position) !== 'undefined') {
-    queryString.push(`longitude=${position[0]}&latitude=${position[1]}`);
+    queryString.push(`longitude=${position[1]}&latitude=${position[0]}`);
   }
   if (typeof (distance) !== 'undefined') {
     queryString.push(`distance=${distance}`);
