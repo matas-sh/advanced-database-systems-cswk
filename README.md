@@ -9,7 +9,7 @@ Relies on a Hyper-V VM hosting a Mongo Database, accessible on local network (mo
 ## Backend
 The Backend is a Python Flask server which interacts with the database via PyMongo. It builds queries based on the query parameters provided and returns the resulting data in a json format. All inputted query parameters are sanitised and checked before being used in database queries. If any issue exists with a query parameter, the database is not queried and a detailed error message is returned in json format. All query parameters are completely checked before returning an error message, so the error message contains __ALL__ issues with query paramteres in the request.
 
-To start the backend server, you first need Python3 and Pip3 to run the application and manage dependencies. If these are available, move to the `backend/` directory and install all the requirements with Pip3:
+To start the backend server, you first need Python3 and Pip3 to run the application and manage dependencies. If these are available, move to the `~/Projects/adavanced-database-systems-cswk/backend/` directory and install all the requirements with Pip3:
 ```bash
 pip3 install -r requirements.txt
 ```
@@ -70,4 +70,16 @@ http://{VM_IP}:5000/crimes?latitude=51.6238441467285&longitude=0.431697010993958
 ## Frontend
 The Frontend is a Webpack server that collects all the source code and bundles in a single file that get sent to the user's browser once a request to the server is made via port `9000`. There after, the the browser sends GET requests to Flask server via port `5000` using source code to retrieve any data it needs for rendering the UI.
 
-To start the UI server, the user needs to move to the `./frontend` directory and run `npm install` or `yarn install` (this assumes that user has either yarn or npm on the machine). Because the frontend is a combination of Webpack, React and many other JavaScript packages, to ensure that the server runs, the user needs to install those packages. After successful installation. The user can start the ui server by running the fallowing command - `npm start` in the current directory. This will start the bundling process and once finished will display 'Compiled successfully' message at the bottom of the logs in the terminal. Once compiled, the UI will be available on the network at 'http://{VM_IP}:9000/'
+(this assumes that the machine has either yarn or npm installed and that the node module packages for frontend have been installed). For machines other than this virtual machine the user would have to install those packages with `npm install` or `yarn install`. As the server is a combination of Webpack, React and many other JavaScript packages.
+
+To start the server the user has to move to the `./frontend` directory via command:
+```
+cd ../frontend
+```
+and then run the fallowing command: 
+```
+npm start
+``` 
+This will start the bundling process and once finished will display `Compiled successfully` message at the bottom of the logs in the terminal. 
+
+Once compiled, the UI will be available on the network at fallowing url that can be accessed via browser -  `http://{VM_IP}:9000/`
