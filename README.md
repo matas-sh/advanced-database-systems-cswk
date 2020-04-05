@@ -70,5 +70,4 @@ http://{VM_IP}:5000/crimes?latitude=51.6238441467285&longitude=0.431697010993958
 ## Frontend
 The Frontend is a Webpack server that collects all the source code and bundles in a single file that get sent to the user's browser once a request to the server is made via port `9000`. There after, the the browser sends GET requests to Flask server via port `5000` using source code to retrieve any data it needs for rendering the UI.
 
-To start the start user needs to move to the
-Because the frontend is a combination of React and many other packages, to ensure that the server runs user needs
+To start the UI server, the user needs to move to the `./frontend` directory and run `npm install` or `yarn install` (this assumes that user has either yarn or npm on the machine). Because the frontend is a combination of Webpack, React and many other JavaScript packages, to ensure that the server runs, the user needs to install those packages. After successful installation. The user can start the ui server by running the fallowing command - `npm start` in the current directory. This will start the bundling process and once finished will display 'Compiled successfully' message at the bottom of the logs in the terminal. Once compiled, the UI will be available on the network at 'http://{VM_IP}:9000/'
