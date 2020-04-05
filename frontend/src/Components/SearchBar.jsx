@@ -4,7 +4,7 @@ import Paper from '@material-ui/core/Paper';
 import InputBase from '@material-ui/core/InputBase';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
-import { SearchContext } from '../State/SearchState';
+import { QueryContext } from '../State/QueryState';
 import getLocationByString from '../API/getLocationByString';
 
 const useStyles = makeStyles((theme) => ({
@@ -28,24 +28,22 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function searchForLocaton(locationString, dispatch) {
+function searchForLocation(locationString, dispatch) {
   dispatch({
-    type: 'SET_LOADING',
+    type: 'QUERY_LOADING',
     payload: true,
   });
 
   getLocationByString(locationString)
     .then((data) => {
       dispatch({
-        type: 'SET_LOCATION_FOUND',
-        payload: { location: data.origin.displayLatLng },
+        type: 'SET_QUERY_VALUES',
+        payload: { position: data.origin.displayLatLng },
       });
     })
     .catch((e) => {
-      console.log(e);
-
       dispatch({
-        type: 'SET_SEARCH_ERROR',
+        type: 'QUERY_COMPLETED',
         payload: e,
       });
     });
@@ -54,7 +52,7 @@ function searchForLocaton(locationString, dispatch) {
 
 export default function SearchBar() {
   const classes = useStyles();
-  const { sDispatch } = useContext(SearchContext);
+  const { qDispatch } = useContext(QueryContext);
   const [fieldValue, setFieldValue] = useState('');
 
   return (
@@ -69,7 +67,7 @@ export default function SearchBar() {
         type="submit"
         className={classes.iconButton}
         aria-label="search"
-        onClick={() => searchForLocaton(fieldValue, sDispatch)}
+        onClick={() => searchForLocation(fieldValue, qDispatch)}
       >
         <SearchIcon />
       </IconButton>

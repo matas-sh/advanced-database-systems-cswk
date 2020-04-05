@@ -12,7 +12,6 @@ const initialState = {
 };
 
 const reducer = (state, action) => {
-  console.log('wtf');
   switch (action.type) {
     case 'SET_LOCATION_FOUND':
       return {

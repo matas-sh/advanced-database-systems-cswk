@@ -6,26 +6,25 @@ export default async function queryBuilder(options) {
   const {
     date1,
     date2,
-    latitude,
-    longitude,
+    position,
     crimeType,
     distance,
-    docFields,
+    option,
   } = options;
     // isolate search results to UK only
-  const queryString = [];
+  let queryString = [];
+  console.log('running query builder');
 
-  if (typeof (latitude) !== 'undefined') {
-    queryString.push(`latitude=${latitude}`);
-  }
-  if (typeof (longitude) !== 'undefined') {
-    queryString.push(`longitude=${longitude}`);
+  if (typeof (position) !== 'undefined') {
+    queryString.push(`longitude=${position[1]}&latitude=${position[0]}`);
   }
   if (typeof (distance) !== 'undefined') {
     queryString.push(`distance=${distance}`);
   }
-  if (crimeType.length) {
-    queryString.push(`crime-type=${crimeType.join(',')}`);
+  console.log('crimeType.size: ', crimeType.size);
+  if (crimeType.size > 0 && crimeType.size < 11) {
+    console.log('crimeType.values().join ', Array.from(crimeType.values()).join(','));
+    queryString.push(`crime-type=${Array.from(crimeType.values()).join(',')}`);
   }
   if (typeof (date1) !== 'undefined') {
     queryString.push(`date1=${date1}`);
@@ -33,11 +32,13 @@ export default async function queryBuilder(options) {
   if (typeof (date2) !== 'undefined') {
     queryString.push(`date2=${date2}`);
   }
-  if (docFields.length) {
-    queryString.push(`doc-fields-=${docFields.join(',')}`);
+  if (typeof (option) !== 'undefined') {
+    console.log('option:', option);
+    queryString.push(`option=${option}`);
   }
 
-  queryString.join('&');
+  queryString = queryString.join('&');
+  console.log('QUERY BUILEEEEER: ', queryString);
 
   const response = await fetch(`http://${HOSTNAME}:${PORT}/crimes?${queryString}`);
   const data = await response.json();
