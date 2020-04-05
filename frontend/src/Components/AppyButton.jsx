@@ -20,7 +20,7 @@ export default function ApplyButton() {
   return (
     <Container>
       <Button style={{ width: '100%' }} variant="contained" color="primary" onClick={() => { queryDatabse(qDispatch, qState); }}>
-            Apply
+        Apply
       </Button>
     </Container>
   );
