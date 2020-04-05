@@ -7,7 +7,6 @@ import {
   Route,
 } from 'react-router-dom';
 import MapPage from './Pages/MapPage';
-import App from './Pages/App';
 
 
 export default function AppRouter() {
@@ -15,10 +14,7 @@ export default function AppRouter() {
     <Router>
       <div id="router">
         <Switch>
-          <Route exact path="/">
-            <App />
-          </Route>
-          <Route path="/map">
+          <Route path="/">
             <MapPage />
           </Route>
         </Switch>
