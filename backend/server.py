@@ -55,7 +55,7 @@ def all_falls_within_location():
 # Main route for crimes data
 @app.route('/crimes')
 def crimes():
-    # Get sanitised query paramteres using Sanitiser and required_params
+    # Get sanitised query parameters using Sanitiser and required_params
     parameters = sanitiser.get_sanitised_params(request.args)
 
     # If there are any errors with query parameters, return the error instead
