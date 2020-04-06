@@ -53,7 +53,7 @@ export function marker(markerData) {
         opacity={0.8}
         autoPan
       >
-        <Popup>
+        <Popup autoPan={false}>
           {markerData.popUpText}
         </Popup>
       </Marker>
