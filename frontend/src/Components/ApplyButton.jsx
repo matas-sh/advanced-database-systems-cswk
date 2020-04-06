@@ -4,7 +4,7 @@ import Container from '@material-ui/core/Container';
 import { QueryContext } from '../State/QueryState';
 import queryBuilder from '../API/queryBuilder';
 
-function queryDatabse(dispatch, state) {
+function queryDatabase(dispatch, state) {
   dispatch({ type: 'QUERY_LOADING' });
   queryBuilder(state)
     .then((data) => {
@@ -19,7 +19,7 @@ export default function ApplyButton() {
   const { qDispatch, qState } = useContext(QueryContext);
   return (
     <Container>
-      <Button style={{ width: '100%' }} variant="contained" color="primary" onClick={() => { queryDatabse(qDispatch, qState); }}>
+      <Button style={{ width: '100%', backgroundColor: '#52af77' }} variant="contained" color="primary" onClick={() => { queryDatabase(qDispatch, qState); }}>
         Apply
       </Button>
     </Container>

@@ -129,16 +129,15 @@ export default function PersistentDrawerLeft() {
               <Divider />
               <Box pt={2} pb={2}>
                 <Container>
-                  <CrimeTypeCheckbox />
+                  <YearMonthPicker />
                 </Container>
               </Box>
               <Divider />
               <Box pt={2} pb={2}>
                 <Container>
-                  <YearMonthPicker />
+                  <CrimeTypeCheckbox />
                 </Container>
               </Box>
-
             </>
           ) : <></>
       }
