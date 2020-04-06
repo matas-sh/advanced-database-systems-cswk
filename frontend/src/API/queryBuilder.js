@@ -4,8 +4,7 @@ const PORT = 5000;
 
 export default async function queryBuilder(options) {
   const {
-    date1,
-    date2,
+    date,
     position,
     crimeType,
     distance,
@@ -23,11 +22,8 @@ export default async function queryBuilder(options) {
   if (crimeType.size > 0 && crimeType.size < 11) {
     queryString.push(`crime-type=${Array.from(crimeType.values()).join(',')}`);
   }
-  if (typeof (date1) !== 'undefined') {
-    queryString.push(`date1=${date1}`);
-  }
-  if (typeof (date2) !== 'undefined') {
-    queryString.push(`date2=${date2}`);
+  if (typeof (date) !== 'undefined') {
+    queryString.push(`date1=${date}`);
   }
   if (typeof (option) !== 'undefined') {
     queryString.push(`option=${option}`);

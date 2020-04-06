@@ -4,10 +4,9 @@ import PropTypes from 'prop-types';
 export const QueryContext = React.createContext();
 
 const initialState = {
-  date1: '2020-01',
-  date2: undefined,
+  date: '2020-01',
   position: [52.4866322, -1.8925337],
-  crimeType: new Set(['Burglary', 'Robbery']),
+  crimeType: new Set(),
   distance: 1500,
   option: 'grouped-location',
   loading: false,

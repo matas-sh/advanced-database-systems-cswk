@@ -9,7 +9,8 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import { makeStyles } from '@material-ui/core/styles';
 import DistanceSlider from './DistanceSlider';
 import CrimeTypeCheckbox from './CrimeTypeCheckbox';
-import ApplyButton from './AppyButton';
+import YearMonthPicker from './YearMonthPicker';
+import ApplyButton from './ApplyButton';
 
 const drawerWidth = 280;
 
@@ -118,17 +119,26 @@ export default function PersistentDrawerLeft() {
         open
           ? (
             <>
-              <Box pt={2} pl={2} pr={2}>
+              <Box pt={2} pl={2} pb={2} pr={2}>
                 <ApplyButton />
               </Box>
+              <Divider />
               <Box pt={2} pl={2} pr={2}>
                 <DistanceSlider />
               </Box>
-              <Box pt={2}>
+              <Divider />
+              <Box pt={2} pb={2}>
                 <Container>
                   <CrimeTypeCheckbox />
                 </Container>
               </Box>
+              <Divider />
+              <Box pt={2} pb={2}>
+                <Container>
+                  <YearMonthPicker />
+                </Container>
+              </Box>
+
             </>
           ) : <></>
       }
