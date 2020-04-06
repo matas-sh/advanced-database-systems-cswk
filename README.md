@@ -11,7 +11,7 @@ If you receive an error about the VM being unable to connect to the network swit
 ## Backend
 The Backend is a Python Flask server which interacts with the database via PyMongo. It builds queries based on the query parameters provided and returns the resulting data in a json format. All inputted query parameters are sanitised and checked before being used in database queries. If any issue exists with a query parameter, the database is not queried, and a detailed error message is returned in json format. All query parameters are completely checked before returning an error message, so the error message contains __ALL__ issues with query parameters in the request.
 
-To start the backend server, you first need Python3 and Pip3 to run the application and manage dependencies. If these are available, move to the `~/Projects/adavanced-database-systems-cswk/backend/` directory and install all the requirements with Pip3:
+To start the backend server, you first need Python3 and Pip3 to run the application and manage dependencies. If these are available, move to the `~/Projects/advanced-database-systems-cswk/backend/` directory and install all the requirements with Pip3:
 ```bash
 pip3 install -r requirements.txt
 ```
@@ -76,11 +76,11 @@ The Frontend is a Webpack server that collects all the source code and bundles i
 
 (this assumes that the machine has either yarn or npm installed and that the node module packages for frontend have been installed). For machines other than this virtual machine the user would have to install those packages with `npm install` or `yarn install`. As the server is a combination of Webpack, React and many other JavaScript packages.
 
-To start the server the user has to move to the `~/Projects/adavanced-database-systems-cswk/frontend` directory via command:
+To start the server the user has to move to the `~/Projects/advanced-database-systems-cswk/frontend` directory via command:
 ```bash
-cd ../frontend
+cd .~/Projects/advanced-database-systems-cswk/frontend
 ```
-and then run the fallowing command:
+and then run the following command:
 ```bash
 npm start
 ```
